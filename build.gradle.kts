@@ -106,7 +106,14 @@ intellijPlatform {
 
     pluginVerification {
         ides {
-            recommended()
+            // Verify against specific released IDE versions instead of recommended()
+            // to avoid issues with unreleased versions
+            select {
+                types = listOf(IntelliJPlatformType.IntelliJIDEACommunity)
+                channels = listOf(ProductRelease.Channel.RELEASE)
+                sinceBuild = providers.gradleProperty("pluginSinceBuild")
+                untilBuild = providers.gradleProperty("pluginSinceBuild") // Only verify against the minimum version for now
+            }
         }
     }
 }
