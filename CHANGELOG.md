@@ -1,18 +1,21 @@
 # Changelog
 
 All notable changes to the "Copy with inline issues" plugin will be documented in this file.
-
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.4/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [Unreleased]
 
 ## [1.0.7] - 2025-12-15
 
 ### 🔄 Changed
+
 - **Extended IDE compatibility** - Updated compatibility range to support IDE builds up to 272.* (through 2027.2)
 - **2025.3 Support** - Now compatible with WebStorm 2025.3, IntelliJ IDEA 2025.3, and all other JetBrains IDEs version 2025.3
 - **Improved plugin description** - Simplified and clarified the plugin description for better readability
 
 ### 🛠️ Technical
+
 - Updated `pluginUntilBuild` from 252.* to 272.* in gradle.properties
 - Streamlined README.md and plugin.xml descriptions for better user experience
 - Ensures compatibility with IDE versions 2024.2 through 2027.2
@@ -20,11 +23,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.0.6] - 2025-01-19
 
 ### 🛠️ Fixed
+
 - **Deprecated API updates** - Replaced deprecated `AnActionEvent.getRequiredData()` calls with modern `getData()` API
 - **Enhanced null safety** - Added explicit null checks for improved error handling and compatibility
 - **Future-proofing** - Eliminated "scheduled for removal" API warnings in IntelliJ Platform 252+
 
 ### 🔧 Technical
+
 - Updated `CopyWithInlineIssues.kt` to use `getData()` with null safety
 - Updated `CopyFileWithInlineIssues.kt` to use `getData()` with null safety
 - Maintained identical functionality while improving API compatibility
@@ -32,6 +37,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.0.5] - 2025-01-18
 
 ### 🔄 Changed
+
 - **Complete name consistency** - Updated all references from "Copy File with Problems" to "Copy with inline issues" across the entire project
 - **Fixed marketplace display** - Plugin now correctly shows as "Copy with inline issues" in JetBrains Marketplace
 - **Updated documentation** - All installation instructions and references use the new name consistently
@@ -40,12 +46,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.0.4] - 2025-01-18
 
 ### 🔄 Changed
+
 - **Plugin name** updated from "Copy File with Problems" to "Copy with inline issues"
 - **Plugin description** updated to reflect new branding
 - **Version bumped** to 1.0.4 across all configuration files
 - **Documentation** updated to reflect new plugin name
 
 ### 🛠️ Technical
+
 - Added CLAUDE.md for development guidance and Claude Code integration
 - Updated GitHub Actions workflow with proper token usage
 - **Automatic deployment** - Added automated plugin publishing to JetBrains Marketplace
@@ -55,7 +63,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### 🎉 Initial Release
 
-#### ✨ Added
 - **Copy With Problems** action for selected text in the editor
 - **Copy File With Inline Issues** action for entire files in a project tree
 - Comprehensive error detection system with multiple detection methods:
@@ -81,23 +88,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Multi-language support** for all file types
 - Custom icons for both actions
 
-#### 🔧 Technical Features
-- Multiple error detection strategies for comprehensive coverage
-- Relative path calculation from the project root
-- Distinct severity levels (ERROR, WARNING, INFO)
-- Pattern-based validation for common syntax issues
-- Integration with IntelliJ's inspection profile system
-
-#### 🎯 Use Cases
-- Code reviews with complete error context
-- Bug reporting with precise error information
-- Team collaboration without losing IDE context
-- Documentation of known issues
-- Stack Overflow posts with comprehensive context
-
 ### 📋 Requirements
+
 - IntelliJ IDEA 2024.2+ (Build 242+)
 - Compatible with all IntelliJ-based IDEs
 
-### 🚀 Installation
-Install directly from the JetBrains Marketplace or download the plugin ZIP file.
+[Unreleased]: https://github.com/Israel-Kli/jetbrains-plugin-copy-with-inline-issues/compare/v1.0.7...HEAD
+[1.0.7]: https://github.com/Israel-Kli/jetbrains-plugin-copy-with-inline-issues/compare/v1.0.6...v1.0.7
+[1.0.6]: https://github.com/Israel-Kli/jetbrains-plugin-copy-with-inline-issues/compare/v1.0.5...v1.0.6
+[1.0.5]: https://github.com/Israel-Kli/jetbrains-plugin-copy-with-inline-issues/compare/v1.0.4...v1.0.5
+[1.0.4]: https://github.com/Israel-Kli/jetbrains-plugin-copy-with-inline-issues/compare/v1.0.0...v1.0.4
+[1.0.0]: https://github.com/Israel-Kli/jetbrains-plugin-copy-with-inline-issues/commits/v1.0.0
