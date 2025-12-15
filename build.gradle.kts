@@ -1,6 +1,7 @@
 import org.jetbrains.changelog.Changelog
 import org.jetbrains.changelog.markdownToHTML
 import org.jetbrains.intellij.platform.gradle.TestFrameworkType
+import org.jetbrains.intellij.platform.gradle.IntelliJPlatformType
 
 plugins {
     id("java") // Java support
@@ -106,14 +107,8 @@ intellijPlatform {
 
     pluginVerification {
         ides {
-            // Verify against specific released IDE versions instead of recommended()
-            // to avoid issues with unreleased versions
-            select {
-                types = listOf(IntelliJPlatformType.IntelliJIDEACommunity)
-                channels = listOf(ProductRelease.Channel.RELEASE)
-                sinceBuild = providers.gradleProperty("pluginSinceBuild")
-                untilBuild = providers.gradleProperty("pluginSinceBuild") // Only verify against the minimum version for now
-            }
+            // Explicitly download and verify against 2024.2 which we know exists
+            ide("IC-2024.2")
         }
     }
 }
