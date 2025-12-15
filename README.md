@@ -9,30 +9,14 @@
 Never lose context when sharing code snippets or entire files. This plugin automatically includes all compilation errors, warnings, and syntax issues as inline comments.
 
 <!-- Plugin description -->
-**Copy with inline issues** is a powerful plugin compatible with all JetBrains IDEs that revolutionizes how you share and document code issues. 
-Never lose context when copying code snippets or entire files - this plugin automatically includes all compilation errors, 
-warnings, and syntax issues as inline comments using the correct comment syntax for each programming language.
+Copy code with errors and warnings as inline comments. Perfect for sharing with AI assistants (Claude, ChatGPT, Gemini), code reviews, and bug reports.
 
 ## ✨ Key Features
 
-- **📋 Smart Copy with Context** - Copy selected code with errors/warnings as inline comments
-- **📄 Complete File Export** - Copy entire files with all detected problems included
-- **🎯 Multi-Language Support** - Works with Java, Kotlin, JavaScript, TypeScript, Python, PHP, C/C++, C#, Go, Ruby, Rust, SQL, HTML, CSS, YAML, JSON, XML, and many other programming languages
-- **🔍 Comprehensive Error Detection** - Captures syntax errors, semantic issues, and inspection warnings
-- **🌐 Context Menu Integration** - Seamlessly integrated into editor and project tree context menus
-- **📍 Relative Path Headers** - Shows clean file paths relative to your project root
-- **🗣️ Language-Aware Comments** - Automatically uses the correct comment syntax for each programming language
-- **🔄 Cross-Platform Compatibility** - Works consistently across all JetBrains IDEs: IntelliJ IDEA Ultimate & Community, WebStorm, PyCharm, PhpStorm, CLion, GoLand, RubyMine, Rider, DataGrip, DataSpell, RustRover, Aqua, Android Studio, AppCode, MPS, JetBrains Client, Code With Me Guest, and Writerside
-- **⚡ Robust Error Detection** - Multiple fallback mechanisms ensure error detection works even when IDE-specific features aren't available
-
-## 🚀 Perfect For
-
-- **AI-Assisted Code Fixing** - Copy problematic files with inline errors directly to AI tools (e.g., Claude Code, ChatGPT, Gemini, or other external chats) for quick and accurate fixes.
-- **Code Reviews** - Share problematic code with complete error context
-- **Bug Reports** - Include exact error messages with the failing code
-- **Team Collaboration** - Share code issues without losing IDE context
-- **Documentation** - Document known issues with precise error details
-- **Stack Overflow** - Post complete, context-rich code examples
+- **📋 Smart Copy** - Copy selected code or entire files with inline error/warning comments
+- **🎯 Multi-Language** - Supports Java, Kotlin, JavaScript, TypeScript, Python, PHP, C/C++, C#, Go, Ruby, Rust, SQL, HTML, CSS, YAML, and more
+- **🤖 AI-Ready** - Optimized for sharing with AI coding assistants for quick fixes
+- **🔍 Comprehensive Detection** - Captures syntax errors, semantic issues, and inspection warnings
 
 ## 💡 How It Works
 
@@ -42,62 +26,24 @@ warnings, and syntax issues as inline comments using the correct comment syntax 
 
 ## 📝 Example Output
 
-The plugin automatically uses the correct comment syntax for each programming language:
-
-**Python files:**
+**Python:**
 ```python
-# FILE: src/calculator.py
-
+# FILE: calculator.py
 def calculate(a, b):
     result = a + c
     # ERROR: undefined variable 'c'
     return result
 ```
 
-**Java files:**
+**Java:**
 ```java
-// FILE: src/Calculator.java
-
+// FILE: Calculator.java
 public class Calculator {
     public int add(int a, int b) {
-        return a + c;
-        // ERROR: cannot resolve symbol 'c'
+        return a + c;  // ERROR: cannot resolve symbol 'c'
     }
 }
 ```
-
-**HTML files:**
-```html
-<!-- FILE: index.html -->
-
-<div>
-    <p>Hello World</span>
-    <!-- ERROR: mismatched closing tag -->
-</div>
-```
-
-**SQL files:**
-```sql
--- FILE: queries/users.sql
-
-SELECT * FROM users
-WHERE invalid_column = 'value';
--- ERROR: column 'invalid_column' doesn't exist
-```
-
-## 🔧 Advanced Detection
-
-- **Java/Kotlin** - Compilation errors, missing return types, annotation issues, split identifiers
-- **JavaScript/TypeScript** - Syntax errors, type mismatches, ESLint warnings
-- **Python** - Syntax errors, import issues, PEP violations
-- **PHP** - Parse errors, undefined variables, coding standard violations
-- **YAML** - Block mapping errors, indentation issues, syntax violations
-- **General** - PSI syntax errors, unresolved references, inspection warnings
-
-*Transform your debugging workflow - never copy "silent" broken code again!*
-
-## 🔍 Keywords & Search Terms
-**AI Assistant Ready** | **Claude** | **ChatGPT** | **Gemini** | **Grok** | **Copy with Errors** | **Copy Warnings** | **Error Context** | **Bug Report** | **Code Review** | **Debugging** | **Syntax Errors** | **Compilation Errors** | **IDE Integration** | **Developer Tools** | **Code Analysis** | **Problem Detection** | **Error Messages** | **Warning Messages** | **Context Preservation** | **Code Sharing** | **Stack Overflow** | **Team Collaboration** | **Copy Code with Context** | **Error Inline Comments** | **Debug Helper** | **Code Quality** | **Issue Tracking** | **Development Workflow**
 
 <!-- Plugin description end -->
 

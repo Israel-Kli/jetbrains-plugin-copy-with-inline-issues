@@ -5,6 +5,18 @@ All notable changes to the "Copy with inline issues" plugin will be documented i
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.4/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.7] - 2025-12-15
+
+### 🔄 Changed
+- **Extended IDE compatibility** - Updated compatibility range to support IDE builds up to 272.* (through 2027.2)
+- **2025.3 Support** - Now compatible with WebStorm 2025.3, IntelliJ IDEA 2025.3, and all other JetBrains IDEs version 2025.3
+- **Improved plugin description** - Simplified and clarified the plugin description for better readability
+
+### 🛠️ Technical
+- Updated `pluginUntilBuild` from 252.* to 272.* in gradle.properties
+- Streamlined README.md and plugin.xml descriptions for better user experience
+- Ensures compatibility with IDE versions 2024.2 through 2027.2
+
 ## [1.0.6] - 2025-01-19
 
 ### 🛠️ Fixed

@@ -2,58 +2,19 @@
 <idea-plugin>
     <id>com.github.israelkli.intellijplugincopyfilewithproblems</id>
     <name>Copy with inline issues</name>
-    <version>1.0.6</version>
+    <version>1.0.7</version>
     <vendor url="https://github.com/Israel-Kli">israel-kli</vendor>
 
     <description><![CDATA[
-    <h2>🔍 Copy Code with Errors & Warnings Inline</h2>
-    
-    <p><strong>Copy with inline issues</strong> is a powerful plugin compatible with all JetBrains IDEs (IntelliJ IDEA Ultimate & Community, WebStorm, PyCharm, PhpStorm, CLion, GoLand, RubyMine, Rider, DataGrip, DataSpell, RustRover, Aqua, Android Studio, AppCode, MPS, JetBrains Client, Code With Me Guest, Writerside, and more) that revolutionizes how you share and document code issues. 
-    Never lose context when copying code snippets or entire files - this plugin automatically includes all compilation errors, 
-    warnings, and syntax issues as inline comments.</p>
-    
+    <p>Copy code with errors and warnings as inline comments. Perfect for sharing with AI assistants (Claude, ChatGPT, Gemini), code reviews, and bug reports.</p>
+
     <h3>✨ Key Features</h3>
     <ul>
-        <li><strong>📋 Smart Copy with Context</strong> - Copy selected code with errors/warnings as inline comments</li>
-        <li><strong>📄 Complete File Export</strong> - Copy entire files with all detected problems included</li>
-        <li><strong>🎯 Multi-Language Support</strong> - Works with Java, Kotlin, JavaScript, TypeScript, Python, PHP, C/C++, C#, Go, Ruby, Rust, SQL, HTML, CSS, YAML, JSON, XML, and many other programming languages</li>
-        <li><strong>🔍 Comprehensive Error Detection</strong> - Captures syntax errors, semantic issues, and inspection warnings</li>
-        <li><strong>🌐 Context Menu Integration</strong> - Seamlessly integrated into editor and project tree context menus</li>
-        <li><strong>📍 Relative Path Headers</strong> - Shows clean file paths relative to your project root</li>
+        <li><strong>📋 Smart Copy</strong> - Copy selected code or entire files with inline error/warning comments</li>
+        <li><strong>🎯 Multi-Language</strong> - Supports Java, Kotlin, JavaScript, TypeScript, Python, PHP, C/C++, C#, Go, Ruby, Rust, SQL, HTML, CSS, YAML, and more</li>
+        <li><strong>🤖 AI-Ready</strong> - Optimized for sharing with AI coding assistants for quick fixes</li>
+        <li><strong>🔍 Comprehensive Detection</strong> - Captures syntax errors, semantic issues, and inspection warnings</li>
     </ul>
-    
-    <h3>🚀 Perfect For</h3>
-    <ul>
-        <li><strong>Code Reviews</strong> - Share problematic code with complete error context</li>
-        <li><strong>Bug Reports</strong> - Include exact error messages with the failing code</li>
-        <li><strong>Team Collaboration</strong> - Share code issues without losing IDE context</li>
-        <li><strong>Documentation</strong> - Document known issues with precise error details</li>
-        <li><strong>Stack Overflow</strong> - Post complete, context-rich code examples</li>
-    </ul>
-    
-    <h3>💡 How It Works</h3>
-    <ol>
-        <li><strong>Right-click in editor</strong> → Select "Copy with inline issues" for selected text</li>
-        <li><strong>Right-click on file in project tree</strong> → Select "Copy file with inline issues" for entire files</li>
-        <li><strong>Paste anywhere</strong> → Get your code with all errors as // ERROR: comments</li>
-    </ol>
-    
-    <h3>🔧 Advanced Detection</h3>
-    <ul>
-        <li><strong>Java/Kotlin</strong> - Compilation errors, missing return types, annotation issues, split identifiers</li>
-        <li><strong>JavaScript/TypeScript</strong> - Syntax errors, type mismatches, ESLint warnings</li>
-        <li><strong>Python</strong> - Syntax errors, import issues, PEP violations</li>
-        <li><strong>PHP</strong> - Parse errors, undefined variables, coding standard violations</li>
-        <li><strong>C/C++</strong> - Compilation errors, memory issues, undefined behavior warnings</li>
-        <li><strong>C#</strong> - Compilation errors, nullable reference warnings, code analysis issues</li>
-        <li><strong>Go</strong> - Compilation errors, vet warnings, formatting issues</li>
-        <li><strong>Ruby</strong> - Syntax errors, runtime warnings, style violations</li>
-        <li><strong>Rust</strong> - Compilation errors, borrowing issues, clippy warnings</li>
-        <li><strong>YAML</strong> - Block mapping errors, indentation issues, syntax violations</li>
-        <li><strong>General</strong> - PSI syntax errors, unresolved references, inspection warnings</li>
-    </ul>
-    
-    <p><em>Transform your debugging workflow - never copy "silent" broken code again!</em></p>
     ]]></description>
 
     <change-notes><![CDATA[
@@ -74,7 +35,7 @@
     </ul>
     ]]></change-notes>
 
-    <idea-version since-build="242" until-build="252.*"/>
+    <idea-version since-build="242" until-build="272.*"/>
     
     <depends>com.intellij.modules.platform</depends>
     <depends>com.intellij.modules.lang</depends>
