@@ -2,7 +2,7 @@
 <idea-plugin>
     <id>com.github.israelkli.intellijplugincopyfilewithproblems</id>
     <name>Copy with inline issues</name>
-    <version>1.0.8</version>
+    <version>1.0.9</version>
     <vendor url="https://github.com/Israel-Kli">israel-kli</vendor>
 
     <description><![CDATA[
@@ -18,11 +18,9 @@
     ]]></description>
 
     <change-notes><![CDATA[
-    <h3>Version 1.0.8</h3>
+    <h3>Version 1.0.9</h3>
     <ul>
-        <li><strong>Deprecated API migration</strong> - Replaced deprecated ReadAction.compute(ThrowableComputable) with runReadAction for IntelliJ Platform 261+ compatibility</li>
-        <li><strong>Change notes not displayed</strong> - Fixed build configuration that caused "What's New" section to always be empty in IDE plugin settings</li>
-        <li><strong>Cleaned up plugin description</strong> - Removed emoji icons from plugin description, changelog, and README for a cleaner presentation</li>
+        <li><strong>Deprecated API fix</strong> - Replaced deprecated HighlightSeverity.INFORMATION with HighlightSeverity.TEXT_ATTRIBUTES for IntelliJ Platform 261+ compatibility</li>
     </ul>
     ]]></change-notes>
 

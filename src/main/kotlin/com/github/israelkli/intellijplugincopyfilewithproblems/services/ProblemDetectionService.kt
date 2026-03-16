@@ -42,7 +42,7 @@ class ProblemDetectionService {
                         HighlightSeverity.ERROR -> "ERROR"
                         HighlightSeverity.WARNING -> "WARNING"
                         HighlightSeverity.WEAK_WARNING -> "WEAK_WARNING"
-                        HighlightSeverity.INFORMATION -> "INFO"
+                        HighlightSeverity.TEXT_ATTRIBUTES -> "INFO"
                         else -> "INFO"
                     }
                     problems.add(IssueInfo(

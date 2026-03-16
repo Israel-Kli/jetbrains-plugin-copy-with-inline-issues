@@ -5,6 +5,11 @@ All notable changes to the "Copy with inline issues" plugin will be documented i
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.4/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.9]
+
+### Fixed
+- **Deprecated API fix** - Replaced deprecated `HighlightSeverity.INFORMATION` with `HighlightSeverity.TEXT_ATTRIBUTES` to resolve the remaining deprecated API warning with IntelliJ Platform 261+
+
 ## [1.0.8]
 
 ### Fixed
