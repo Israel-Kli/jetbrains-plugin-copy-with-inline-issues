@@ -5,7 +5,7 @@ import com.intellij.codeInspection.InspectionManager
 import com.intellij.codeInspection.LocalInspectionTool
 import com.intellij.codeInspection.ProblemDescriptor
 import com.intellij.lang.annotation.HighlightSeverity
-import com.intellij.openapi.application.ReadAction
+import com.intellij.openapi.application.runReadAction
 import com.intellij.openapi.editor.impl.DocumentMarkupModel
 import com.intellij.profile.codeInspection.InspectionProjectProfileManager
 import com.intellij.psi.PsiDocumentManager
@@ -117,7 +117,7 @@ class ProblemDetectionService {
                         val inspectionManager = InspectionManager.getInstance(project)
                         
                         // Run inspection on the file with proper error handling
-                        val descriptors = ReadAction.compute<Array<ProblemDescriptor>, RuntimeException> {
+                        val descriptors = runReadAction {
                             try {
                                 inspectionTool.checkFile(psiFile, inspectionManager, false) ?: emptyArray()
                             } catch (_: Exception) {

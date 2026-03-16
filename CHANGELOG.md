@@ -5,33 +5,40 @@ All notable changes to the "Copy with inline issues" plugin will be documented i
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.4/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.8]
+
+### Fixed
+- **Deprecated API migration** - Replaced deprecated `ReadAction.compute(ThrowableComputable)` with `runReadAction` to resolve compatibility warning with IntelliJ Platform 261+
+- **Change notes not displayed** - Fixed build configuration that caused "What's New" section to always be empty in IDE plugin settings
+- **Cleaned up plugin description** - Removed emoji icons from plugin description, changelog, and README for a cleaner presentation
+
 ## [1.0.7] - 2025-12-15
 
-### 🔄 Changed
+### Changed
 - **Extended IDE compatibility** - Updated compatibility range to support IDE builds up to 272.* (through 2027.2)
 - **2025.3 Support** - Now compatible with WebStorm 2025.3, IntelliJ IDEA 2025.3, and all other JetBrains IDEs version 2025.3
 - **Improved plugin description** - Simplified and clarified the plugin description for better readability
 
-### 🛠️ Technical
+### Technical
 - Updated `pluginUntilBuild` from 252.* to 272.* in gradle.properties
 - Streamlined README.md and plugin.xml descriptions for better user experience
 - Ensures compatibility with IDE versions 2024.2 through 2027.2
 
 ## [1.0.6] - 2025-01-19
 
-### 🛠️ Fixed
+### Fixed
 - **Deprecated API updates** - Replaced deprecated `AnActionEvent.getRequiredData()` calls with modern `getData()` API
 - **Enhanced null safety** - Added explicit null checks for improved error handling and compatibility
 - **Future-proofing** - Eliminated "scheduled for removal" API warnings in IntelliJ Platform 252+
 
-### 🔧 Technical
+### Technical
 - Updated `CopyWithInlineIssues.kt` to use `getData()` with null safety
 - Updated `CopyFileWithInlineIssues.kt` to use `getData()` with null safety
 - Maintained identical functionality while improving API compatibility
 
 ## [1.0.5] - 2025-01-18
 
-### 🔄 Changed
+### Changed
 - **Complete name consistency** - Updated all references from "Copy File with Problems" to "Copy with inline issues" across the entire project
 - **Fixed marketplace display** - Plugin now correctly shows as "Copy with inline issues" in JetBrains Marketplace
 - **Updated documentation** - All installation instructions and references use the new name consistently
@@ -39,13 +46,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.0.4] - 2025-01-18
 
-### 🔄 Changed
+### Changed
 - **Plugin name** updated from "Copy File with Problems" to "Copy with inline issues"
 - **Plugin description** updated to reflect new branding
 - **Version bumped** to 1.0.4 across all configuration files
 - **Documentation** updated to reflect new plugin name
 
-### 🛠️ Technical
+### Technical
 - Added CLAUDE.md for development guidance and Claude Code integration
 - Updated GitHub Actions workflow with proper token usage
 - **Automatic deployment** - Added automated plugin publishing to JetBrains Marketplace
@@ -53,9 +60,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.0.0] - 2025-01-13
 
-### 🎉 Initial Release
+### Initial Release
 
-#### ✨ Added
+### Added
 - **Copy With Problems** action for selected text in the editor
 - **Copy File With Inline Issues** action for entire files in a project tree
 - Comprehensive error detection system with multiple detection methods:
@@ -64,7 +71,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - IntelliJ inspection system integration
   - PsiReference resolution for unresolved symbols
 - **Java-specific validations:**
-  - Split identifier detection (e.g., "cacheM anager" → "cacheManager")
+  - Split identifier detection (e.g., "cacheM anager" -> "cacheManager")
   - Method declaration validation
   - Annotation placement verification
 - **YAML-specific validations:**
@@ -81,23 +88,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Multi-language support** for all file types
 - Custom icons for both actions
 
-#### 🔧 Technical Features
+### Technical Features
 - Multiple error detection strategies for comprehensive coverage
 - Relative path calculation from the project root
 - Distinct severity levels (ERROR, WARNING, INFO)
 - Pattern-based validation for common syntax issues
 - Integration with IntelliJ's inspection profile system
 
-#### 🎯 Use Cases
+### Use Cases
 - Code reviews with complete error context
 - Bug reporting with precise error information
 - Team collaboration without losing IDE context
 - Documentation of known issues
 - Stack Overflow posts with comprehensive context
 
-### 📋 Requirements
+### Requirements
 - IntelliJ IDEA 2024.2+ (Build 242+)
 - Compatible with all IntelliJ-based IDEs
 
-### 🚀 Installation
+### Installation
 Install directly from the JetBrains Marketplace or download the plugin ZIP file.

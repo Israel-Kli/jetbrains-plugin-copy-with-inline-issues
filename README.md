@@ -4,27 +4,27 @@
 ![Version](https://img.shields.io/jetbrains/plugin/v/com.github.israelkli.intellijplugincopyfilewithproblems)
 ![Downloads](https://img.shields.io/jetbrains/plugin/d/com.github.israelkli.intellijplugincopyfilewithproblems)
 
-## 🔍 Copy Code with Errors & Warnings Inline
+## Copy Code with Errors & Warnings Inline
 
 Never lose context when sharing code snippets or entire files. This plugin automatically includes all compilation errors, warnings, and syntax issues as inline comments.
 
 <!-- Plugin description -->
 Copy code with errors and warnings as inline comments. Perfect for sharing with AI assistants (Claude, ChatGPT, Gemini), code reviews, and bug reports.
 
-## ✨ Key Features
+## Key Features
 
-- **📋 Smart Copy** - Copy selected code or entire files with inline error/warning comments
-- **🎯 Multi-Language** - Supports Java, Kotlin, JavaScript, TypeScript, Python, PHP, C/C++, C#, Go, Ruby, Rust, SQL, HTML, CSS, YAML, and more
-- **🤖 AI-Ready** - Optimized for sharing with AI coding assistants for quick fixes
-- **🔍 Comprehensive Detection** - Captures syntax errors, semantic issues, and inspection warnings
+- **Smart Copy** - Copy selected code or entire files with inline error/warning comments
+- **Multi-Language** - Supports Java, Kotlin, JavaScript, TypeScript, Python, PHP, C/C++, C#, Go, Ruby, Rust, SQL, HTML, CSS, YAML, and more
+- **AI-Ready** - Optimized for sharing with AI coding assistants for quick fixes
+- **Comprehensive Detection** - Captures syntax errors, semantic issues, and inspection warnings
 
-## 💡 How It Works
+## How It Works
 
 1. **Right-click in editor** → Select "Copy with inline issues" for selected text
 2. **Right-click on file in project tree** → Select "Copy file with inline issues" for entire files
 3. **Paste anywhere** → Get your code with all errors as language-appropriate comments
 
-## 📝 Example Output
+## Example Output
 
 **Python:**
 ```python
@@ -47,19 +47,19 @@ public class Calculator {
 
 <!-- Plugin description end -->
 
-## 🌐 Cross-Platform Excellence
+## Cross-Platform Excellence
 
 This plugin has been specifically optimized for cross-platform compatibility:
 
-### ✅ **Key Benefits:**
+### Key Benefits:
 
-1. **🔄 Cross-Platform Compatibility**: Works consistently across IntelliJ IDEA, WebStorm, PyCharm, and other JetBrains IDEs
-2. **🗣️ Language-Aware Comments**: Automatically uses the correct comment syntax for each programming language
-3. **🔍 Robust Error Detection**: Multiple fallback mechanisms ensure error detection works even when IDE-specific features aren't available
-4. **⚡ Better Performance**: Optimized inspection running with proper error handling and limits
-5. **🧪 Comprehensive Testing**: Tests verify language-specific functionality and cross-platform compatibility
+1. **Cross-Platform Compatibility**: Works consistently across IntelliJ IDEA, WebStorm, PyCharm, and other JetBrains IDEs
+2. **Language-Aware Comments**: Automatically uses the correct comment syntax for each programming language
+3. **Robust Error Detection**: Multiple fallback mechanisms ensure error detection works even when IDE-specific features aren't available
+4. **Better Performance**: Optimized inspection running with proper error handling and limits
+5. **Comprehensive Testing**: Tests verify language-specific functionality and cross-platform compatibility
 
-### 🎯 **Language-Specific Comment Support:**
+### Language-Specific Comment Support:
 
 - **Python, Ruby, Shell, YAML**: `# ERROR: message`
 - **Java, JavaScript, TypeScript, Kotlin**: `// ERROR: message`
@@ -67,7 +67,7 @@ This plugin has been specifically optimized for cross-platform compatibility:
 - **HTML, XML**: `<!-- ERROR: message -->`
 - **CSS**: `/* ERROR: message */`
 
-### 🔧 **Enhanced Error Detection:**
+### Enhanced Error Detection:
 
 - **PSI-based detection**: Works across all IDE environments
 - **Inspection system integration**: Leverages IDE-specific inspections when available
