@@ -1,26 +1,60 @@
 <!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
 <idea-plugin>
     <id>com.github.israelkli.intellijplugincopyfilewithproblems</id>
-    <name>Copy with inline issues</name>
-    <version>1.0.9</version>
+    <name>Copy with inline issues for AI</name>
+    <version>1.1.0</version>
     <vendor url="https://github.com/Israel-Kli">israel-kli</vendor>
 
     <description><![CDATA[
-    <p>Copy code with errors and warnings as inline comments. Perfect for sharing with AI assistants (Claude, ChatGPT, Gemini), code reviews, and bug reports.</p>
+    <p><b>Tired of manually typing out error messages when asking ChatGPT, Claude, or Gemini for help?</b> This plugin copies your code with all errors, warnings, and syntax issues as inline comments — ready to paste directly into any AI assistant.</p>
 
-    <h3>Key Features</h3>
+    <h3>Before vs after</h3>
+    <p>You copy this:</p>
+    <pre>def calculate(a, b):
+    result = a + c
+    return result</pre>
+    <p>You paste this:</p>
+    <pre># FILE: calculator.py
+def calculate(a, b):
+    result = a + c
+    # ERROR: undefined variable 'c'
+    return result</pre>
+
+    <h3>How it works</h3>
+    <ol>
+        <li>Select code or right-click a file in the project tree</li>
+        <li>Choose <b>"Copy with inline issues"</b> from the context menu</li>
+        <li>Paste into ChatGPT, Claude, Gemini, Cursor, or any AI tool — errors included</li>
+    </ol>
+
+    <h3>Key features</h3>
     <ul>
-        <li><strong>Smart Copy</strong> - Copy selected code or entire files with inline error/warning comments</li>
-        <li><strong>Multi-Language</strong> - Supports Java, Kotlin, JavaScript, TypeScript, Python, PHP, C/C++, C#, Go, Ruby, Rust, SQL, HTML, CSS, YAML, and more</li>
-        <li><strong>AI-Ready</strong> - Optimized for sharing with AI coding assistants for quick fixes</li>
-        <li><strong>Comprehensive Detection</strong> - Captures syntax errors, semantic issues, and inspection warnings</li>
+        <li><b>AI-Ready Output</b> — Paste directly into ChatGPT, Claude, Gemini, Copilot, Cursor, or any LLM for instant debugging help</li>
+        <li><b>Copy Selection or Entire File</b> — Works from the editor (selection) and project tree (full file)</li>
+        <li><b>Multi-Language</b> — Java, Kotlin, JavaScript, TypeScript, Python, PHP, C/C++, C#, Go, Ruby, Rust, SQL, HTML, CSS, YAML, and more</li>
+        <li><b>Comprehensive Detection</b> — Captures syntax errors, semantic issues, and inspection warnings</li>
+        <li><b>Language-Aware Comments</b> — Automatically uses the correct comment syntax for each language</li>
     </ul>
+
+    <h3>Supported languages</h3>
+    <table>
+        <tr><td>Java, Kotlin, JS, TS, C/C++, C#, Go, Rust</td><td><code>// ERROR: message</code></td></tr>
+        <tr><td>Python, Ruby, Shell, YAML</td><td><code># ERROR: message</code></td></tr>
+        <tr><td>SQL, Lua, Haskell</td><td><code>-- ERROR: message</code></td></tr>
+        <tr><td>HTML, XML</td><td><code>&lt;!-- ERROR: message --&gt;</code></td></tr>
+        <tr><td>CSS</td><td><code>/* ERROR: message */</code></td></tr>
+    </table>
+
+    <h3>Works with</h3>
+    <p>IntelliJ IDEA, WebStorm, PyCharm, PhpStorm, GoLand, CLion, Rider, DataGrip, and all JetBrains IDEs.</p>
     ]]></description>
 
     <change-notes><![CDATA[
-    <h3>Version 1.0.9</h3>
+    <h3>Version 1.1.0</h3>
     <ul>
-        <li><strong>Deprecated API fix</strong> - Replaced deprecated HighlightSeverity.INFORMATION with HighlightSeverity.TEXT_ATTRIBUTES for IntelliJ Platform 261+ compatibility</li>
+        <li><strong>Renamed to "Copy with inline issues for AI"</strong> - Better discoverability in the marketplace for users looking for AI-powered coding tools</li>
+        <li><strong>Improved plugin description</strong> - Clear before/after code example, step-by-step usage guide, and supported languages table</li>
+        <li><strong>Updated README</strong> - Redesigned GitHub page with better onboarding</li>
     </ul>
     ]]></change-notes>
 

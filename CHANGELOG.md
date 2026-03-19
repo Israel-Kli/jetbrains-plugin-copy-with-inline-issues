@@ -5,6 +5,13 @@ All notable changes to the "Copy with inline issues" plugin will be documented i
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.4/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.0]
+
+### Changed
+- **Renamed to "Copy with inline issues for AI"** - Better discoverability in the marketplace for users looking for AI-powered coding tools
+- **Improved plugin description** - Clear before/after code example, step-by-step usage guide, and supported languages table
+- **Updated README** - Redesigned GitHub page with better onboarding, fixed incorrect marketplace links, added demo GIF placeholder
+
 ## [1.0.9]
 
 ### Fixed

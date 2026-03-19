@@ -1,32 +1,34 @@
-# Copy with inline issues
+# Copy with inline issues for AI
 
 ![Build](https://github.com/Israel-Kli/jetbrains-plugin-copy-with-inline-issues/workflows/Build/badge.svg)
 ![Version](https://img.shields.io/jetbrains/plugin/v/com.github.israelkli.intellijplugincopyfilewithproblems)
 ![Downloads](https://img.shields.io/jetbrains/plugin/d/com.github.israelkli.intellijplugincopyfilewithproblems)
 
-## Copy Code with Errors & Warnings Inline
-
-Never lose context when sharing code snippets or entire files. This plugin automatically includes all compilation errors, warnings, and syntax issues as inline comments.
-
 <!-- Plugin description -->
-Copy code with errors and warnings as inline comments. Perfect for sharing with AI assistants (Claude, ChatGPT, Gemini), code reviews, and bug reports.
+Copy code with errors and warnings as inline comments. Perfect for sharing with AI assistants (ChatGPT, Claude, Gemini, Cursor), code reviews, and bug reports.
 
-## Key Features
+## The Problem
 
-- **Smart Copy** - Copy selected code or entire files with inline error/warning comments
-- **Multi-Language** - Supports Java, Kotlin, JavaScript, TypeScript, Python, PHP, C/C++, C#, Go, Ruby, Rust, SQL, HTML, CSS, YAML, and more
-- **AI-Ready** - Optimized for sharing with AI coding assistants for quick fixes
-- **Comprehensive Detection** - Captures syntax errors, semantic issues, and inspection warnings
+When you paste broken code into ChatGPT or Claude, the AI can't see your IDE's red squiggly lines. You end up manually typing out error messages — wasting time and introducing mistakes.
 
-## How It Works
+## The Problem
 
-1. **Right-click in editor** → Select "Copy with inline issues" for selected text
-2. **Right-click on file in project tree** → Select "Copy file with inline issues" for entire files
-3. **Paste anywhere** → Get your code with all errors as language-appropriate comments
+When you paste broken code into ChatGPT or Claude, the AI can't see your IDE's red squiggly lines. You end up manually typing out error messages — wasting time and introducing mistakes.
 
-## Example Output
+## The Solution
 
-**Python:**
+Right-click → **Copy with inline issues** → paste into any AI tool. Errors appear as comments in the correct syntax for your language.
+
+### Before vs After
+
+**You copy this:**
+```python
+def calculate(a, b):
+    result = a + c
+    return result
+```
+
+**You paste this:**
 ```python
 # FILE: calculator.py
 def calculate(a, b):
@@ -35,123 +37,63 @@ def calculate(a, b):
     return result
 ```
 
-**Java:**
-```java
-// FILE: Calculator.java
-public class Calculator {
-    public int add(int a, int b) {
-        return a + c;  // ERROR: cannot resolve symbol 'c'
-    }
-}
-```
+## How it works
 
+1. **Select code** in the editor, or **right-click a file** in the project tree
+2. Choose **"Copy with inline issues"** from the context menu
+3. **Paste** into ChatGPT, Claude, Gemini, Cursor, or any AI tool
+
+## Features
+
+- **AI-Ready Output** — Paste directly into ChatGPT, Claude, Gemini, Copilot, Cursor, or any LLM for instant debugging help
+- **Copy Selection or Entire File** — Works from the editor (selection) and project tree (full file)
+- **Multi-Language** — Java, Kotlin, JavaScript, TypeScript, Python, PHP, C/C++, C#, Go, Ruby, Rust, SQL, HTML, CSS, YAML, and more
+- **Comprehensive Detection** — Captures syntax errors, semantic issues, and inspection warnings
+- **Language-Aware Comments** — Automatically uses the correct comment syntax for each language
+
+### Supported Languages
+
+| Languages | Comment Format |
+|-----------|---------------|
+| Java, Kotlin, JS, TS, C/C++, C#, Go, Rust | `// ERROR: message` |
+| Python, Ruby, Shell, YAML | `# ERROR: message` |
+| SQL, Lua, Haskell | `-- ERROR: message` |
+| HTML, XML | `<!-- ERROR: message -->` |
+| CSS | `/* ERROR: message */` |
 <!-- Plugin description end -->
-
-## Cross-Platform Excellence
-
-This plugin has been specifically optimized for cross-platform compatibility:
-
-### Key Benefits:
-
-1. **Cross-Platform Compatibility**: Works consistently across IntelliJ IDEA, WebStorm, PyCharm, and other JetBrains IDEs
-2. **Language-Aware Comments**: Automatically uses the correct comment syntax for each programming language
-3. **Robust Error Detection**: Multiple fallback mechanisms ensure error detection works even when IDE-specific features aren't available
-4. **Better Performance**: Optimized inspection running with proper error handling and limits
-5. **Comprehensive Testing**: Tests verify language-specific functionality and cross-platform compatibility
-
-### Language-Specific Comment Support:
-
-- **Python, Ruby, Shell, YAML**: `# ERROR: message`
-- **Java, JavaScript, TypeScript, Kotlin**: `// ERROR: message`
-- **SQL, Lua, Haskell**: `-- ERROR: message`
-- **HTML, XML**: `<!-- ERROR: message -->`
-- **CSS**: `/* ERROR: message */`
-
-### Enhanced Error Detection:
-
-- **PSI-based detection**: Works across all IDE environments
-- **Inspection system integration**: Leverages IDE-specific inspections when available
-- **Fallback mechanisms**: Ensures functionality even when some features aren't available
-- **Multiple detection methods**: Combines different approaches for comprehensive error coverage
 
 ## Compatibility
 
-This plugin is compatible with all JetBrains IDEs including:
-- IntelliJ IDEA (Community & Ultimate)
-- WebStorm
-- PyCharm (Community & Professional)
-- PhpStorm
-- GoLand
-- CLion
-- DataGrip
-- Rider
-- And other JetBrains IDEs based on the IntelliJ Platform
+Works with all JetBrains IDEs:
+IntelliJ IDEA, WebStorm, PyCharm, PhpStorm, GoLand, CLion, Rider, DataGrip, and more.
 
 ## Installation
 
-- Using the IDE built-in plugin system:
-  
-  <kbd>Settings/Preferences</kbd> > <kbd>Plugins</kbd> > <kbd>Marketplace</kbd> > <kbd>Search for "Copy with inline issues"</kbd> >
-  <kbd>Install</kbd>
-  
-- Using JetBrains Marketplace:
+**From JetBrains Marketplace:**
 
-  Go to [JetBrains Marketplace](https://plugins.jetbrains.com/plugin/27910-copy-file-with-problems) and install it by clicking the <kbd>Install to ...</kbd> button in case your IDE is running.
+[![Install from Marketplace](https://img.shields.io/badge/Install-from%20Marketplace-blue?style=for-the-badge&logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0Ij48cGF0aCBmaWxsPSJ3aGl0ZSIgZD0iTTEyIDJDNi40OCAyIDIgNi40OCAyIDEyczQuNDggMTAgMTAgMTAgMTAtNC40OCAxMC0xMFMxNy41MiAyIDEyIDJ6bS0xIDE0LjV2LTlsNyA0LjUtNyA0LjV6Ii8+PC9zdmc+)](https://plugins.jetbrains.com/plugin/27910-copy-with-inline-issues)
 
-  You can also download the [latest release](https://plugins.jetbrains.com/plugin/27910-copy-file-with-problems/versions) from JetBrains Marketplace and install it manually using
-  <kbd>Settings/Preferences</kbd> > <kbd>Plugins</kbd> > <kbd>⚙️</kbd> > <kbd>Install plugin from disk...</kbd>
+**From IDE:**
+<kbd>Settings</kbd> → <kbd>Plugins</kbd> → <kbd>Marketplace</kbd> → Search **"Copy with inline issues"** → <kbd>Install</kbd>
 
-- Manually:
-
-  Download the [latest release](https://github.com/Israel-Kli/jetbrains-plugin-copy-with-inline-issues/releases/latest) and install it manually using
-  <kbd>Settings/Preferences</kbd> > <kbd>Plugins</kbd> > <kbd>⚙️</kbd> > <kbd>Install plugin from disk...</kbd>
-
-
-Plugin is inspired by other plugins which have only partial functionality or are outdated, such as:
-- [Code-File-Grabber](https://plugins.jetbrains.com/plugin/21269-code-file-grabber)
-- [CopyWithProblems](https://plugins.jetbrains.com/plugin/23051-copywithproblems)
-- [SLAMP](https://plugins.jetbrains.com/plugin/26544-slamp)
+**Manual:**
+Download from [GitHub Releases](https://github.com/Israel-Kli/jetbrains-plugin-copy-with-inline-issues/releases/latest), then <kbd>Settings</kbd> → <kbd>Plugins</kbd> → <kbd>⚙️</kbd> → <kbd>Install Plugin from Disk</kbd>
 
 ## Development
 
 ### Building the Plugin
 
-To build the plugin ZIP file for distribution:
-
 ```bash
-mkdir -p build/tmp/buildSearchableOptions && ./gradlew buildPlugin -x buildSearchableOptions
+./gradlew buildPlugin -x buildSearchableOptions
 ```
 
-This creates the distributable ZIP at: `build/distributions/jetbrains-plugin-copy-with-inline-issues-1.0.5.zip`
+Output: `build/distributions/`
 
-**If you encounter build issues, try a clean build:**
-```bash
-./gradlew clean buildPlugin -x buildSearchableOptions
-```
-
-**Alternative build commands:**
-- `./gradlew build` - Full build with tests
-- `./gradlew buildPlugin` - Full plugin build (may require closing IntelliJ)
-- `./gradlew jar` - Compile only, faster for development
-
-### Testing the Plugin
-
-To run IntelliJ IDEA with the plugin for testing:
-
-```bash
-./gradlew runIde
-```
-
-This launches a sandbox IntelliJ instance with your plugin pre-installed.
-
-### Installation from Source
-
-After building:
-1. Install the ZIP file: <kbd>Settings</kbd> → <kbd>Plugins</kbd> → <kbd>⚙️</kbd> → <kbd>Install Plugin from Disk</kbd>
-2. Select: `build/distributions/jetbrains-plugin-copy-with-inline-issues-1.0.5.zip`
-3. Restart IntelliJ to ensure clean plugin loading
-4. Test both actions:
-   - **Editor**: Select text → right-click → "Copy with inline issues"
-   - **Project Tree**: Right-click file → "Copy file with inline issues"
+**Other commands:**
+- `./gradlew runIde` — Launch sandbox IDE for testing
+- `./gradlew test` — Run tests
+- `./gradlew jar` — Quick compile (faster for dev)
 
 ---
+
+Inspired by [Code-File-Grabber](https://plugins.jetbrains.com/plugin/21269-code-file-grabber), [CopyWithProblems](https://plugins.jetbrains.com/plugin/23051-copywithproblems), and [SLAMP](https://plugins.jetbrains.com/plugin/26544-slamp).
