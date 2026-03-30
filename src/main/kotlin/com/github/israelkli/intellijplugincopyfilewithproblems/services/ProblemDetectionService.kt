@@ -119,7 +119,8 @@ class ProblemDetectionService {
                         // Run inspection on the file with proper error handling
                         val descriptors = ApplicationManager.getApplication()
                             .runReadAction<Array<ProblemDescriptor>> {
-                                inspectionTool.checkFile(psiFile, inspectionManager, false) ?: emptyArray()
+                                inspectionTool.checkFile(psiFile, inspectionManager, false)
+                                    ?: emptyArray<ProblemDescriptor>()
                             }
                         
                         // Filter descriptors that are within our range
