@@ -8,9 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.1.2]
 
-### Changed
+### Fixed
 
-- **Improved changelog** - Added Keep a Changelog comparison links, `[Unreleased]` section, and corrected 1.1.1 release notes description
+- **Deprecated API fix** - Replaced deprecated `ReadAction.compute(ThrowableComputable)` with `ApplicationManager.getApplication().runReadAction(Computable)` in `ProblemDetectionService.runInspectionsOnRange()` to resolve plugin verifier compatibility warning across all supported IDE builds (242–272)
 
 ## [1.1.1]
 

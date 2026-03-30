@@ -5,7 +5,7 @@ import com.intellij.codeInspection.InspectionManager
 import com.intellij.codeInspection.LocalInspectionTool
 import com.intellij.codeInspection.ProblemDescriptor
 import com.intellij.lang.annotation.HighlightSeverity
-import com.intellij.openapi.application.ReadAction
+import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.editor.impl.DocumentMarkupModel
 import com.intellij.profile.codeInspection.InspectionProjectProfileManager
 import com.intellij.psi.PsiDocumentManager
@@ -117,9 +117,10 @@ class ProblemDetectionService {
                         val inspectionManager = InspectionManager.getInstance(project)
                         
                         // Run inspection on the file with proper error handling
-                        val descriptors = ReadAction.compute<Array<ProblemDescriptor>, Exception> {
-                            inspectionTool.checkFile(psiFile, inspectionManager, false) ?: emptyArray()
-                        }
+                        val descriptors = ApplicationManager.getApplication()
+                            .runReadAction<Array<ProblemDescriptor>> {
+                                inspectionTool.checkFile(psiFile, inspectionManager, false) ?: emptyArray()
+                            }
                         
                         // Filter descriptors that are within our range
                         for (descriptor in descriptors) {
