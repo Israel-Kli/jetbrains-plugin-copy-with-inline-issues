@@ -8,15 +8,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.1.2]
 
-### Fixed
+### Changed
 
-- **Deprecated API fix** - Replaced deprecated `ReadAction.compute(ThrowableComputable)` with `ReadAction.computeBlocking(ThrowableComputable)` in `ProblemDetectionService.runInspectionsOnRange()` to fully resolve the plugin verifier compatibility warning with IntelliJ Platform 261+
+- **Improved changelog** - Added Keep a Changelog comparison links, `[Unreleased]` section, and corrected 1.1.1 release notes description
 
 ## [1.1.1]
 
 ### Fixed
 
-- **Deprecated API migration** - Replaced deprecated `runReadAction(Function0)` Kotlin extension with `ReadAction.compute(ThrowableComputable)` in `ProblemDetectionService.runInspectionsOnRange()` to address compatibility warning with IntelliJ Platform 261+
+- **Deprecated API migration** - Replaced deprecated `runReadAction(Function0)` Kotlin extension with `ReadAction.compute(ThrowableComputable)` in `ProblemDetectionService.runInspectionsOnRange()` to resolve plugin verifier compatibility warning with IntelliJ Platform 261+
 
 ## [1.1.0]
 

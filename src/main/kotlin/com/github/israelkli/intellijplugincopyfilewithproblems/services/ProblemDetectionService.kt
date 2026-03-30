@@ -117,7 +117,7 @@ class ProblemDetectionService {
                         val inspectionManager = InspectionManager.getInstance(project)
                         
                         // Run inspection on the file with proper error handling
-                        val descriptors = ReadAction.computeBlocking<Array<ProblemDescriptor>, Exception> {
+                        val descriptors = ReadAction.compute<Array<ProblemDescriptor>, Exception> {
                             inspectionTool.checkFile(psiFile, inspectionManager, false) ?: emptyArray()
                         }
                         
