@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.3]
+
+### Changed
+
+- **Improved README** - Rewrote plugin description and README in simple, clear English for better readability; removed duplicate section, fixed Before/After example to match actual plugin output, added PHP and Dockerfile to the supported languages table
+
 ## [1.1.2]
 
 ### Fixed
@@ -143,7 +149,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - IntelliJ IDEA 2024.2+ (Build 242+)
 - Compatible with all IntelliJ-based IDEs
 
-[Unreleased]: https://github.com/Israel-Kli/jetbrains-plugin-copy-with-inline-issues/compare/v1.1.2...HEAD
+[Unreleased]: https://github.com/Israel-Kli/jetbrains-plugin-copy-with-inline-issues/compare/v1.1.3...HEAD
+[1.1.3]: https://github.com/Israel-Kli/jetbrains-plugin-copy-with-inline-issues/compare/v1.1.2...v1.1.3
 [1.1.2]: https://github.com/Israel-Kli/jetbrains-plugin-copy-with-inline-issues/compare/v1.1.1...v1.1.2
 [1.1.1]: https://github.com/Israel-Kli/jetbrains-plugin-copy-with-inline-issues/compare/v1.1.0...v1.1.1
 [1.1.0]: https://github.com/Israel-Kli/jetbrains-plugin-copy-with-inline-issues/compare/v1.0.9...v1.1.0

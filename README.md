@@ -5,58 +5,61 @@
 ![Downloads](https://img.shields.io/jetbrains/plugin/d/com.github.israelkli.intellijplugincopyfilewithproblems)
 
 <!-- Plugin description -->
-Copy code with errors and warnings as inline comments. Perfect for sharing with AI assistants (ChatGPT, Claude, Gemini, Cursor), code reviews, and bug reports.
+A JetBrains IDE plugin that copies your code with all errors and warnings added as comments. Paste it into ChatGPT, Claude, Gemini, Cursor, or any AI tool. The AI will see every problem your IDE sees.
 
 ## The Problem
 
-When you paste broken code into ChatGPT or Claude, the AI can't see your IDE's red squiggly lines. You end up manually typing out error messages — wasting time and introducing mistakes.
+You have broken code. Your IDE shows red and yellow markers on the lines with errors. But when you copy the code and paste it into ChatGPT or Claude, those markers are gone. The AI does not know what is wrong.
 
-## The Problem
-
-When you paste broken code into ChatGPT or Claude, the AI can't see your IDE's red squiggly lines. You end up manually typing out error messages — wasting time and introducing mistakes.
+So you have to explain each error yourself: what line it is on, what the message says. This takes time. You can forget some errors. You can make typos.
 
 ## The Solution
 
-Right-click → **Copy with inline issues** → paste into any AI tool. Errors appear as comments in the correct syntax for your language.
+Right-click your code and pick **Copy with inline issues**. The plugin takes every error and warning from your IDE and adds them as comments right next to the lines where they appear. Each comment uses the correct comment style for the language.
 
-### Before vs After
+You paste the result into any AI tool. The AI sees the file name, the code, and all the error messages on the right lines. You do not need to explain anything.
 
-**You copy this:**
+### Before and After
+
+You select this code in your IDE:
 ```python
 def calculate(a, b):
     result = a + c
     return result
 ```
 
-**You paste this:**
+You paste this into ChatGPT:
 ```python
-# FILE: calculator.py
+# File: calculator.py
+
 def calculate(a, b):
     result = a + c
-    # ERROR: undefined variable 'c'
+    # ERROR: Unresolved reference 'c'
     return result
 ```
 
-## How it works
+The AI now knows the file name, the line with the error, and the error message. You did not type any of that.
+
+## How to Use
 
 1. **Select code** in the editor, or **right-click a file** in the project tree
-2. Choose **"Copy with inline issues"** from the context menu
-3. **Paste** into ChatGPT, Claude, Gemini, Cursor, or any AI tool
+2. Pick **"Copy with inline issues"** from the menu
+3. **Paste** into any AI tool. All errors and warnings are already in the text
 
 ## Features
 
-- **AI-Ready Output** — Paste directly into ChatGPT, Claude, Gemini, Copilot, Cursor, or any LLM for instant debugging help
-- **Copy Selection or Entire File** — Works from the editor (selection) and project tree (full file)
-- **Multi-Language** — Java, Kotlin, JavaScript, TypeScript, Python, PHP, C/C++, C#, Go, Ruby, Rust, SQL, HTML, CSS, YAML, and more
-- **Comprehensive Detection** — Captures syntax errors, semantic issues, and inspection warnings
-- **Language-Aware Comments** — Automatically uses the correct comment syntax for each language
+- **Ready for AI tools** — paste into ChatGPT, Claude, Gemini, Copilot, Cursor, or any LLM
+- **Two ways to copy** — select code in the editor, or right-click a file in the project tree
+- **15+ languages** — Java, Kotlin, JavaScript, TypeScript, Python, Go, Rust, C/C++, PHP, and more
+- **Finds real problems** — syntax errors, missing variables, wrong types, and inspection warnings
+- **Correct comment style** — each language gets its own comment format (see table below)
 
 ### Supported Languages
 
 | Languages | Comment Format |
 |-----------|---------------|
-| Java, Kotlin, JS, TS, C/C++, C#, Go, Rust | `// ERROR: message` |
-| Python, Ruby, Shell, YAML | `# ERROR: message` |
+| Java, Kotlin, JS, TS, C/C++, C#, Go, Rust, PHP | `// ERROR: message` |
+| Python, Ruby, Shell, YAML, Dockerfile | `# ERROR: message` |
 | SQL, Lua, Haskell | `-- ERROR: message` |
 | HTML, XML | `<!-- ERROR: message -->` |
 | CSS | `/* ERROR: message */` |
@@ -80,8 +83,6 @@ IntelliJ IDEA, WebStorm, PyCharm, PhpStorm, GoLand, CLion, Rider, DataGrip, and 
 Download from [GitHub Releases](https://github.com/Israel-Kli/jetbrains-plugin-copy-with-inline-issues/releases/latest), then <kbd>Settings</kbd> → <kbd>Plugins</kbd> → <kbd>⚙️</kbd> → <kbd>Install Plugin from Disk</kbd>
 
 ## Development
-
-### Building the Plugin
 
 ```bash
 ./gradlew buildPlugin -x buildSearchableOptions
