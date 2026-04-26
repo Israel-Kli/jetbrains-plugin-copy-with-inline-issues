@@ -297,6 +297,31 @@ class ProblemDetectionServiceTest : BasePlatformTestCase() {
         }
     }
 
+    fun testFindProblemsForFileBucketing() {
+        val invalidJavaCode = """
+            public class BucketTest {
+                public void method() {
+                    undeclaredVariable = 5;
+                    if (true {
+                        System.out.println("Syntax error");
+                    }
+                }
+            }
+        """.trimIndent()
+
+        val psiFile = myFixture.configureByText("BucketTest.java", invalidJavaCode)
+        val document = psiFile.viewProvider.document ?: throw AssertionError("Document should exist")
+        val issuesByLine = service.findProblemsForFile(psiFile, document, 0, invalidJavaCode.length)
+
+        assertNotNull("Issues map should not be null", issuesByLine)
+
+        // Each key should be a valid line number
+        for (lineNumber in issuesByLine.keys) {
+            assertTrue("Line number $lineNumber should be >= 0", lineNumber >= 0)
+            assertTrue("Line number $lineNumber should be valid for document", lineNumber < document.lineCount)
+        }
+    }
+
     fun testPerformanceWithRepeatedCalls() {
         val javaCode = """
             public class Performance {

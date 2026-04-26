@@ -1,6 +1,7 @@
 package com.github.israelkli.intellijplugincopyfilewithproblems.actions
 
 import com.github.israelkli.intellijplugincopyfilewithproblems.services.ProblemDetectionService
+import com.github.israelkli.intellijplugincopyfilewithproblems.settings.PluginSettings
 import com.intellij.openapi.actionSystem.ActionUpdateThread
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.ide.CopyPasteManager
@@ -65,12 +66,26 @@ abstract class BaseFileAction : AnAction() {
         return "$prefix$severityPrefix: $message$suffix"
     }
     
+    private fun filterIssues(issues: List<ProblemDetectionService.IssueInfo>): List<ProblemDetectionService.IssueInfo> {
+        val settings = PluginSettings.getInstance().state
+        return issues.filter { issue ->
+            when (issue.severity) {
+                "ERROR" -> settings.severityFilterErrors
+                "WARNING" -> settings.severityFilterWarnings
+                "WEAK_WARNING" -> settings.severityFilterWeakWarnings
+                "INFO" -> settings.severityFilterInfo
+                "INSPECTION" -> settings.severityFilterWarnings
+                else -> true
+            }
+        }
+    }
+
     private fun appendIssueComments(
         builder: StringBuilder,
         psiFile: PsiFile,
         issues: List<ProblemDetectionService.IssueInfo>
     ) {
-        for (issue in issues) {
+        for (issue in filterIssues(issues)) {
             builder.appendLine()
             val severityPrefix = when (issue.severity) {
                 "ERROR" -> "ERROR"
@@ -91,6 +106,12 @@ abstract class BaseFileAction : AnAction() {
         lineEnd: Int,
         headerProvider: (String) -> String
     ): String {
+        val issuesByLine = problemDetectionService.findProblemsForFile(
+            psiFile, document,
+            document.getLineStartOffset(lineStart),
+            document.getLineEndOffset(lineEnd)
+        )
+
         return buildString {
             val virtualFile = psiFile.virtualFile
             if (virtualFile != null) {
@@ -98,27 +119,30 @@ abstract class BaseFileAction : AnAction() {
                 appendLine(headerComment)
                 appendLine()
             }
-            
+
             for (lineNumber in lineStart..lineEnd) {
                 val lineStartOffset = document.getLineStartOffset(lineNumber)
                 val lineEndOffset = document.getLineEndOffset(lineNumber)
                 val lineText = document.getText(TextRange(lineStartOffset, lineEndOffset))
-                
+
                 append(lineText)
-                
-                val problems = problemDetectionService.findProblems(psiFile, lineStartOffset, lineEndOffset)
-                appendIssueComments(this, psiFile, problems)
+                appendIssueComments(this, psiFile, issuesByLine[lineNumber].orEmpty())
                 appendLine()
             }
         }
     }
-    
+
     protected fun buildFileContentWithInlineIssues(
         psiFile: PsiFile,
         document: com.intellij.openapi.editor.Document,
         project: com.intellij.openapi.project.Project,
         virtualFile: com.intellij.openapi.vfs.VirtualFile
     ): String {
+        val issuesByLine = problemDetectionService.findProblemsForFile(
+            psiFile, document,
+            0, document.textLength
+        )
+
         return buildString {
             val projectBasePath = project.basePath
             val relativePath = if (projectBasePath != null && virtualFile.path.startsWith(projectBasePath)) {
@@ -126,20 +150,16 @@ abstract class BaseFileAction : AnAction() {
             } else {
                 virtualFile.path
             }
-            
+
             val headerComment = formatComment(psiFile, "File", relativePath)
             appendLine(headerComment)
             appendLine()
-            
+
             val fileContent = document.text
             val lines = fileContent.lines()
             lines.forEachIndexed { index, line ->
                 append(line)
-                
-                val lineStartOffset = document.getLineStartOffset(index)
-                val lineEndOffset = document.getLineEndOffset(index)
-                val issues = problemDetectionService.findProblems(psiFile, lineStartOffset, lineEndOffset)
-                appendIssueComments(this, psiFile, issues)
+                appendIssueComments(this, psiFile, issuesByLine[index].orEmpty())
                 appendLine()
             }
         }

@@ -2,45 +2,57 @@ package com.github.israelkli.intellijplugincopyfilewithproblems.actions
 
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.CommonDataKeys
+import com.intellij.openapi.application.ApplicationManager
+import com.intellij.openapi.application.ReadAction
+import com.intellij.openapi.progress.ProgressIndicator
+import com.intellij.openapi.progress.Task
 
 class CopyWithInlineIssues : BaseFileAction() {
 
     override fun actionPerformed(e: AnActionEvent) {
+        val project = e.project ?: return
         val editor = e.getData(CommonDataKeys.EDITOR) ?: return
         val psiFile = e.getData(CommonDataKeys.PSI_FILE) ?: return
-        
+
         val selectionModel = editor.selectionModel
-        if (!selectionModel.hasSelection()) {
+        if (!selectionModel.hasSelection()) return
+
+        val document = editor.document
+        val startLine = document.getLineNumber(selectionModel.selectionStart)
+        val endLine = document.getLineNumber(selectionModel.selectionEnd)
+
+        if (ApplicationManager.getApplication().isUnitTestMode) {
+            val result = buildContentWithProblems(psiFile, document, startLine, endLine) { fileName -> fileName }
+            copyToClipboard(result)
             return
         }
-        
-        val document = editor.document
-        val startOffset = selectionModel.selectionStart
-        val endOffset = selectionModel.selectionEnd
-        
-        val startLine = document.getLineNumber(startOffset)
-        val endLine = document.getLineNumber(endOffset)
-        
-        val result = buildContentWithProblems(
-            psiFile,
-            document,
-            startLine,
-            endLine,
-        ) { fileName -> fileName }
-        
-        copyToClipboard(result)
+
+        object : Task.Backgroundable(project, "Analyzing with inline issues", true) {
+            override fun run(indicator: ProgressIndicator) {
+                indicator.isIndeterminate = true
+                indicator.text = "Running IDE inspections..."
+
+                val result = ReadAction.compute<String, RuntimeException> {
+                    buildContentWithProblems(psiFile, document, startLine, endLine) { fileName -> fileName }
+                }
+
+                ApplicationManager.getApplication().invokeLater {
+                    copyToClipboard(result)
+                }
+            }
+        }.queue()
     }
 
     override fun update(e: AnActionEvent) {
         val project = e.project
         val editor = e.getData(CommonDataKeys.EDITOR)
         val psiFile = e.getData(CommonDataKeys.PSI_FILE)
-        
-        val isEnabled = (project != null) && 
-                       (editor != null) && 
-                       (psiFile != null) && 
+
+        val isEnabled = (project != null) &&
+                       (editor != null) &&
+                       (psiFile != null) &&
                        (editor.selectionModel.hasSelection())
-        
+
         e.presentation.isEnabledAndVisible = isEnabled
         e.presentation.text = "Copy with Inline Issues"
     }

@@ -6,6 +6,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.0] - 2026-04-26
+
+### Added
+
+- **Settings page** — New "Copy with Inline Issues" settings in Preferences → Tools. Configure which severity levels to include (errors, warnings, weak warnings, info), comment-incompatible language fallback behavior, and notification preference.
+- **Background task with progress indicator** — Problem detection now runs off the EDT in a background thread with a status-bar progress indicator. The IDE stays responsive even for large files.
+- **Per-line dedup** — Issues are now deduplicated within each line rather than globally, so the same error type on different lines is correctly reported for each occurrence.
+
+### Changed
+
+- **Faster performance** — Problem detection now runs ONCE per file and buckets results by line number, instead of re-running all three detection methods for every line. This gives a ~Nx speedup for N-line files.
+- **Detection runs in background** — Both "Copy with inline issues" (editor selection) and "Copy file with inline issues" (project tree) actions now queue detection in a cancellable background task with progress indication.
+
+### Fixed
+
+- **EDT freeze eliminated** — Previously, large file selections could freeze the IDE. Now the detection runs asynchronously with a status-bar progress indicator.
+
 ## [1.1.3]
 
 ### Changed
@@ -149,7 +166,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - IntelliJ IDEA 2024.2+ (Build 242+)
 - Compatible with all IntelliJ-based IDEs
 
-[Unreleased]: https://github.com/Israel-Kli/jetbrains-plugin-copy-with-inline-issues/compare/v1.1.3...HEAD
+[Unreleased]: https://github.com/Israel-Kli/jetbrains-plugin-copy-with-inline-issues/compare/v1.2.0...HEAD
+[1.2.0]: https://github.com/Israel-Kli/jetbrains-plugin-copy-with-inline-issues/compare/v1.1.3...v1.2.0
 [1.1.3]: https://github.com/Israel-Kli/jetbrains-plugin-copy-with-inline-issues/compare/v1.1.2...v1.1.3
 [1.1.2]: https://github.com/Israel-Kli/jetbrains-plugin-copy-with-inline-issues/compare/v1.1.1...v1.1.2
 [1.1.1]: https://github.com/Israel-Kli/jetbrains-plugin-copy-with-inline-issues/compare/v1.1.0...v1.1.1
