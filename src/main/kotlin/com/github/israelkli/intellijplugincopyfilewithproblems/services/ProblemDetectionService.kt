@@ -65,8 +65,14 @@ class ProblemDetectionService {
                 }
             }
 
-            val inspectionIssues = runInspectionsOnRange(psiFile, startOffset, endOffset)
-            allIssues.addAll(inspectionIssues)
+            // Only fall back to expensive programmatic inspections if the Daemon
+            // hasn't produced any highlights for the requested range. This keeps
+            // resource usage close to the v1.1.x baseline when the file has
+            // already been analyzed by the IDE.
+            if (allIssues.isEmpty()) {
+                val inspectionIssues = runInspectionsOnRange(psiFile, startOffset, endOffset)
+                allIssues.addAll(inspectionIssues)
+            }
 
             val psiProblems = findPsiProblems(psiFile, startOffset, endOffset)
             allIssues.addAll(psiProblems)

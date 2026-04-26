@@ -6,6 +6,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.1] - 2026-04-26
+
+### Fixed
+
+- **Crash on settings load** — Fixed `IllegalStateException: Cannot resolve $PRODUCT_WORKSPACE_FILE$` thrown when the plugin tried to access settings from an application-level service. Settings are now stored in a dedicated `copyWithInlineIssues.xml` file under the IDE config directory.
+- **Reintroduced deprecated API** — Restored `ApplicationManager.getApplication().runReadAction(Computable)` in both copy actions, replacing the deprecated `ReadAction.compute(ThrowableComputable)` that was accidentally reintroduced in 1.2.0 (originally fixed in 1.1.2).
+- **Higher idle resource usage** — Programmatic `LocalInspectionTool` execution is now skipped when the IDE Daemon has already produced highlights for the requested range. This avoids re-running up to five inspections on every copy when the cached results are already available, restoring v1.1.x-level resource usage on already-analyzed files.
+
 ## [1.2.0] - 2026-04-26
 
 ### Added

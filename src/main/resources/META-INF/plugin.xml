@@ -43,6 +43,12 @@
     ]]></description>
 
     <change-notes><![CDATA[
+    <h3>Version 1.2.1</h3>
+    <ul>
+        <li><strong>Fixed crash</strong> — Settings no longer throw <code>Cannot resolve $PRODUCT_WORKSPACE_FILE$</code> on first access. Settings are stored in a dedicated config file.</li>
+        <li><strong>Removed deprecated API usage</strong> — Restored the non-deprecated read-action API that was accidentally reintroduced in 1.2.0.</li>
+        <li><strong>Lower resource usage</strong> — Programmatic inspections are now skipped when the IDE Daemon already has highlights for the file, restoring v1.1.x performance.</li>
+    </ul>
     <h3>Version 1.2.0</h3>
     <ul>
         <li><strong>Settings page</strong> — New "Copy with Inline Issues" settings in Preferences → Tools</li>

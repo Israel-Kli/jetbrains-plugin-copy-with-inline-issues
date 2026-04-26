@@ -6,13 +6,12 @@ import com.intellij.openapi.components.Service
 import com.intellij.openapi.components.Service.Level
 import com.intellij.openapi.components.State
 import com.intellij.openapi.components.Storage
-import com.intellij.openapi.components.StoragePathMacros
 import com.intellij.util.xmlb.XmlSerializerUtil
 
 @Service(Level.APP)
 @State(
     name = "CopyWithInlineIssues",
-    storages = [Storage(StoragePathMacros.PRODUCT_WORKSPACE_FILE)]
+    storages = [Storage("copyWithInlineIssues.xml")]
 )
 class PluginSettings : PersistentStateComponent<PluginSettingsState> {
 

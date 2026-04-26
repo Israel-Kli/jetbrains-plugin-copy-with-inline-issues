@@ -3,9 +3,9 @@ package com.github.israelkli.intellijplugincopyfilewithproblems.actions
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.CommonDataKeys
 import com.intellij.openapi.application.ApplicationManager
-import com.intellij.openapi.application.ReadAction
 import com.intellij.openapi.progress.ProgressIndicator
 import com.intellij.openapi.progress.Task
+import com.intellij.openapi.util.Computable
 
 class CopyWithInlineIssues : BaseFileAction() {
 
@@ -32,9 +32,9 @@ class CopyWithInlineIssues : BaseFileAction() {
                 indicator.isIndeterminate = true
                 indicator.text = "Running IDE inspections..."
 
-                val result = ReadAction.compute<String, RuntimeException> {
+                val result = ApplicationManager.getApplication().runReadAction(Computable {
                     buildContentWithProblems(psiFile, document, startLine, endLine) { fileName -> fileName }
-                }
+                })
 
                 ApplicationManager.getApplication().invokeLater {
                     copyToClipboard(result)
