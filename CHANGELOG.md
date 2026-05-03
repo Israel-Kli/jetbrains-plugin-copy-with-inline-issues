@@ -6,6 +6,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.2] - 2026-04-26
+
+### Added
+
+- **Copy notification** — After copying, a toast shows how many lines were copied and how many issues were inlined. Notification type adapts to issue count (information when issues found, warning when none found).
+- **Large-file safety check** — When the selection exceeds 500 lines, a confirmation dialog warns that inspection may cause brief UI lag and lets you cancel before the operation starts. Silently skipped in unit tests.
+- **Robust language matching** — Comment-prefix selection now uses a layered approach (exact language ID → file extension → restricted substring → default). This fixes incorrect comment styles for files whose IntelliJ language ID doesn't match the plugin's substring list (e.g. `.cs` files, `.h` headers, Jinja templates, Rust files).
+
 ## [1.2.1] - 2026-04-26
 
 ### Fixed

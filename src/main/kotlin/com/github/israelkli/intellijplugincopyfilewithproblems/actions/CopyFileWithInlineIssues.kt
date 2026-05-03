@@ -21,20 +21,26 @@ class CopyFileWithInlineIssues : BaseFileAction() {
         if (ApplicationManager.getApplication().isUnitTestMode) {
             val result = buildFileContentWithInlineIssues(psiFile, document, project, virtualFile)
             copyToClipboard(result)
+            notifyCopyResult(project, document.lineCount, 0)
             return
         }
+
+        if (!confirmLargeFileCopy(document.lineCount, virtualFile.name)) return
 
         object : Task.Backgroundable(project, "Analyzing file with inline issues", true) {
             override fun run(indicator: ProgressIndicator) {
                 indicator.isIndeterminate = true
                 indicator.text = "Running IDE inspections..."
 
-                val result = ApplicationManager.getApplication().runReadAction(Computable {
-                    buildFileContentWithInlineIssues(psiFile, document, project, virtualFile)
+                val pair = ApplicationManager.getApplication().runReadAction(Computable {
+                    val content = buildFileContentWithInlineIssues(psiFile, document, project, virtualFile)
+                    val count = countIssueMarkers(content)
+                    content to count
                 })
 
                 ApplicationManager.getApplication().invokeLater {
-                    copyToClipboard(result)
+                    copyToClipboard(pair.first)
+                    notifyCopyResult(project, document.lineCount, pair.second)
                 }
             }
         }.queue()
