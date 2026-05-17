@@ -6,6 +6,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.3] - 2026-05-17
+
+### Removed
+
+- **Empty stub XML files** — Deleted `java-support.xml`, `python-support.xml`, and `webstorm-support.xml`, along with the three optional `<depends>` declarations in `plugin.xml` that loaded them. The plugin never used any Java/Python/JavaScript-specific APIs, so these were dead weight that produced "Dependency not resolved" warnings in the plugin verifier.
+- **Dead duplicate elements in `plugin.xml`** — Removed `<name>`, `<version>`, `<description>`, `<change-notes>`, and `<idea-version>` from the source `plugin.xml`. These are injected at build time by `patchPluginXml` from `gradle.properties`, `README.md`, and `CHANGELOG.md`, so the values in source had no runtime effect and were misleading (e.g. the source still listed `<version>1.1.3</version>`).
+
+### Changed
+
+- **README documents current behavior** — Marketplace description and GitHub README now reflect features added in 1.2.x: background threading, settings page, severity filter, copy notification, large-selection safety dialog, and expanded language coverage. Previously the listing described 1.1.x behavior only.
+
 ## [1.2.2] - 2026-04-26
 
 ### Added

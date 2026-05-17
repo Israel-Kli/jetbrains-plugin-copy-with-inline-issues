@@ -1,6 +1,0 @@
-<idea-plugin>
-    <!-- IntelliJ IDEA Java-specific enhancements -->
-    <extensions defaultExtensionNs="com.intellij">
-        <!-- Additional extensions for Java support can be added here -->
-    </extensions>
-</idea-plugin> 

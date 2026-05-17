@@ -1,72 +1,16 @@
 <!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
+<!--
+    Note: <name>, <version>, <description>, <change-notes>, and <idea-version>
+    are injected at build time by the IntelliJ Platform Gradle plugin
+    (patchPluginXml) from gradle.properties, README.md, and CHANGELOG.md.
+    Do not duplicate them here.
+-->
 <idea-plugin>
     <id>com.github.israelkli.intellijplugincopyfilewithproblems</id>
-    <name>Copy with inline issues for AI</name>
-    <version>1.1.3</version>
     <vendor url="https://github.com/Israel-Kli">israel-kli</vendor>
 
-    <description><![CDATA[
-    <p><b>Your JetBrains IDE runs world-class static code analysis as you type</b> — type checks, data-flow analysis, semantic validation, and language-aware inspections. When you paste code into ChatGPT, Claude, or Cursor, <b>all of that intelligence is lost</b>. The AI sees plain text.</p>
-
-    <p><b>Copy with inline issues for AI</b> captures every error, warning, and inspection result your IDE has already computed and inlines them as language-aware comments — ready to paste anywhere. The AI sees what your IDE sees.</p>
-
-    <h3>How it works</h3>
-    <ol>
-        <li>Select code in the editor, or right-click a file in the project tree</li>
-        <li>Choose <b>Copy with inline issues</b> from the context menu</li>
-        <li>Paste into ChatGPT, Claude, Gemini, Cursor, or any AI tool — errors and warnings included</li>
-    </ol>
-
-    <h3>Key features</h3>
-    <ul>
-        <li><b>Powered by your IDE's static analysis</b> — Leverages JetBrains' inspection engine: syntax validation, type inference, data-flow analysis, and semantic checks</li>
-        <li><b>AI-Ready Output</b> — Paste directly into ChatGPT, Claude, Gemini, Copilot, Cursor, or any LLM for instant debugging help</li>
-        <li><b>Copy Selection or Entire File</b> — Works from the editor (selection) and project tree (full file)</li>
-        <li><b>Multi-Language</b> — Java, Kotlin, JavaScript, TypeScript, Python, PHP, C/C++, C#, Go, Ruby, Rust, SQL, HTML, CSS, YAML, and more</li>
-        <li><b>Comprehensive Detection</b> — Captures syntax errors, semantic issues, and inspection warnings</li>
-        <li><b>Language-Aware Comments</b> — Automatically uses the correct comment syntax for each language</li>
-        <li><b>Background processing</b> — Detection runs off the EDT; no more IDE freezes on large files</li>
-        <li><b>Configurable severity filter</b> — Choose which issues to include</li>
-    </ul>
-
-    <h3>Supported languages</h3>
-    <table>
-        <tr><td>Java, Kotlin, JS, TS, C/C++, C#, Go, Rust</td><td><code>// ERROR: message</code></td></tr>
-        <tr><td>Python, Ruby, Shell, YAML</td><td><code># ERROR: message</code></td></tr>
-        <tr><td>SQL, Lua, Haskell</td><td><code>-- ERROR: message</code></td></tr>
-        <tr><td>HTML, XML</td><td><code>&lt;!-- ERROR: message --&gt;</code></td></tr>
-        <tr><td>CSS</td><td><code>/* ERROR: message */</code></td></tr>
-    </table>
-
-    <h3>Works with</h3>
-    <p>IntelliJ IDEA, WebStorm, PyCharm, PhpStorm, GoLand, CLion, Rider, DataGrip, and all JetBrains IDEs.</p>
-    ]]></description>
-
-    <change-notes><![CDATA[
-    <h3>Version 1.2.1</h3>
-    <ul>
-        <li><strong>Fixed crash</strong> — Settings no longer throw <code>Cannot resolve $PRODUCT_WORKSPACE_FILE$</code> on first access. Settings are stored in a dedicated config file.</li>
-        <li><strong>Removed deprecated API usage</strong> — Restored the non-deprecated read-action API that was accidentally reintroduced in 1.2.0.</li>
-        <li><strong>Lower resource usage</strong> — Programmatic inspections are now skipped when the IDE Daemon already has highlights for the file, restoring v1.1.x performance.</li>
-    </ul>
-    <h3>Version 1.2.0</h3>
-    <ul>
-        <li><strong>Settings page</strong> — New "Copy with Inline Issues" settings in Preferences → Tools</li>
-        <li><strong>Background task</strong> — Detection now runs off the EDT with a progress indicator. No more IDE freezes.</li>
-        <li><strong>Faster detection</strong> — Detection runs once per file instead of once per line. Significant speedup for large files.</li>
-        <li><strong>Severity filter</strong> — Choose which severity levels to include (errors, warnings, weak warnings, info/hints)</li>
-    </ul>
-    ]]></change-notes>
-
-    <idea-version since-build="242" until-build="272.*"/>
-    
     <depends>com.intellij.modules.platform</depends>
     <depends>com.intellij.modules.lang</depends>
-    
-    <!-- Optional dependencies for better IDE-specific support -->
-    <depends optional="true" config-file="webstorm-support.xml">com.intellij.modules.javascript</depends>
-    <depends optional="true" config-file="python-support.xml">com.intellij.modules.python</depends>
-    <depends optional="true" config-file="java-support.xml">com.intellij.modules.java</depends>
 
     <extensions defaultExtensionNs="com.intellij">
         <notificationGroup id="Copy with inline issues" displayType="BALLOON"/>
@@ -85,7 +29,7 @@
                 icon="/icons/copyWithProblems.svg">
             <add-to-group group-id="EditorPopupMenu" anchor="last"/>
         </action>
-        
+
         <action id="CopyFileWithProblems"
                 class="com.github.israelkli.intellijplugincopyfilewithproblems.actions.CopyFileWithInlineIssues"
                 text="Copy file with inline issues"

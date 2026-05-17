@@ -1,6 +1,0 @@
-<idea-plugin>
-    <!-- PyCharm-specific enhancements -->
-    <extensions defaultExtensionNs="com.intellij">
-        <!-- Additional extensions for Python support can be added here -->
-    </extensions>
-</idea-plugin> 

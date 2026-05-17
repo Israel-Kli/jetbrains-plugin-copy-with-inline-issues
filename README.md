@@ -50,25 +50,42 @@ The AI now knows the file name, the line with the error, and the error message. 
 
 - **Ready for AI tools** — paste into ChatGPT, Claude, Gemini, Copilot, Cursor, or any LLM
 - **Two ways to copy** — select code in the editor, or right-click a file in the project tree
-- **15+ languages** — Java, Kotlin, JavaScript, TypeScript, Python, Go, Rust, C/C++, PHP, and more
-- **Finds real problems** — syntax errors, missing variables, wrong types, and inspection warnings
-- **Correct comment style** — each language gets its own comment format (see table below)
+- **Runs in the background** — detection runs off the EDT with a progress indicator; no IDE freezes on large files
+- **Copy notification** — a toast confirms how many lines were copied and how many issues were inlined
+- **Severity filter** — choose which severity levels to include (errors, warnings, weak warnings, info) in Preferences → Tools → Copy with Inline Issues
+- **Large-selection safety** — confirmation dialog before running inspection on selections over 500 lines
+- **20+ languages** — Java, Kotlin, JavaScript, TypeScript, Python, Go, Rust, C/C++, C#, PHP, Ruby, Dart, Swift, and more
+- **Finds real problems** — syntax errors, missing variables, wrong types, and IDE inspection warnings
+- **Correct comment style** — layered language detection picks the right comment format per file (see table below)
 
 ### Supported Languages
 
 | Languages | Comment Format |
 |-----------|---------------|
-| Java, Kotlin, JS, TS, C/C++, C#, Go, Rust, PHP | `// ERROR: message` |
-| Python, Ruby, Shell, YAML, Dockerfile | `# ERROR: message` |
-| SQL, Lua, Haskell | `-- ERROR: message` |
-| HTML, XML | `<!-- ERROR: message -->` |
+| Java, Kotlin, JS, TS, C/C++, C#, Go, Rust, PHP, Swift, Dart, Scala | `// ERROR: message` |
+| Python, Ruby, Shell, YAML, TOML, Dockerfile, Makefile, Terraform, R | `# ERROR: message` |
+| SQL, Lua, Haskell, Ada, VHDL | `-- ERROR: message` |
+| HTML, XML, Markdown, SVG | `<!-- ERROR: message -->` |
 | CSS | `/* ERROR: message */` |
+| INI, Clojure, Lisp, AutoHotkey | `; ERROR: message` |
+
+Unknown languages fall back to `//` style. File extension is used as a hint when the language ID alone is ambiguous.
 <!-- Plugin description end -->
+
+## Settings
+
+**Preferences → Tools → Copy with Inline Issues:**
+
+- **Severity filter** — toggle which severities are inlined (errors / warnings / weak warnings / info). Default: all on.
+- **Notification level** — `BALLOON`, `STATUS_BAR`, or `NONE`. Default: `STATUS_BAR`.
+- **Comment-incompatible language fallback** — what to do with languages like JSON that have no comment syntax.
 
 ## Compatibility
 
 Works with all JetBrains IDEs:
 IntelliJ IDEA, WebStorm, PyCharm, PhpStorm, GoLand, CLion, Rider, DataGrip, and more.
+
+Supported build range: 242 (2024.2) through 272.
 
 ## Installation
 
@@ -93,6 +110,7 @@ Output: `build/distributions/`
 **Other commands:**
 - `./gradlew runIde` — Launch sandbox IDE for testing
 - `./gradlew test` — Run tests
+- `./gradlew verifyPlugin` — Run JetBrains plugin verifier
 - `./gradlew jar` — Quick compile (faster for dev)
 
 ---

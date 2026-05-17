@@ -1,6 +1,0 @@
-<idea-plugin>
-    <!-- WebStorm-specific enhancements -->
-    <extensions defaultExtensionNs="com.intellij">
-        <!-- Additional extensions for JavaScript/TypeScript support can be added here -->
-    </extensions>
-</idea-plugin> 
