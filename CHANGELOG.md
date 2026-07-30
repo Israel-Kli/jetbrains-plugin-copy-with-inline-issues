@@ -6,6 +6,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.4] - 2026-07-31
+
+### Fixed
+
+- **Unterminated block comments** — Ten file types opened a block or template comment without ever emitting its closing delimiter, so everything after the inserted comment was swallowed by the reader. Affected `.md`, `.svg`, `.twig`, `.jinja`, `.j2`, `.hbs`, `.erb`, `.ejs`, `.ml`, and `.mli`. Markdown was the worst case: `<!-- ERROR: …` with no `-->` hid the entire remainder of the copied file in any renderer, defeating the point of pasting into an AI assistant.
+- **Spurious comment terminator on CSS preprocessors** — SCSS resolved to the `// ` line-comment prefix but still received CSS's ` */` suffix, producing `// ERROR: message */`. The prefix and the suffix were chosen by two independent code paths, so any language ID merely *containing* `css`, `html`, or `xml` could inherit a mismatched terminator (XHTML, for example, produced `// ERROR: message -->`).
+- **Wrong comment style when a language plugin is not installed** — The file-extension fallback deliberately omitted extensions whose language ID was already mapped, but that layer exists precisely for IDEs where the language plugin is absent. As a result `.py` and `.rb` emitted `// ` instead of `# `, `.css` emitted `// ` instead of `/* … */`, and `.sql` and `.lua` emitted `// ` instead of `-- `. Every language-ID entry now has a matching extension entry.
+- **Extension-less file names** — `Dockerfile`, `Makefile`, `CMakeLists.txt`, `Gemfile`, `Rakefile`, `Jenkinsfile`, `.gitignore`, `.dockerignore`, `.editorconfig`, and `.env` now resolve to the correct comment style instead of falling through to `// `. These files have no extension, so the extension layer could never classify them.
+- **Unreachable and duplicated mapping entries** — Removed the uppercase `"R"` key, which could never match because lookups are lowercased, and the duplicated `"v"` and `"vhd"` keys, which were silently shadowed.
+
+### Changed
+
+- **Comment delimiters are now inseparable pairs** — Opening and closing delimiters are stored together in a single `CommentStyle` value instead of being derived by two separate functions, so an opener can no longer be emitted without its closer. Language mapping tables moved to the companion object rather than being rebuilt for every action instance.
+
+### Added
+
+- **Broader language coverage** — `.fish`, `.pyi`, `.tfvars`, `.elm`, `.edn`, `.scm`, `.tex`, `.styl`, `.htm`, `.xhtml`, `.xsd`, `.xsl`, `.jinja2`, `.mustache`, and `.cljc`.
+
 ## [1.2.3] - 2026-05-17
 
 ### Removed

@@ -2,201 +2,209 @@ package com.github.israelkli.intellijplugincopyfilewithproblems.actions
 
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
 
+/**
+ * Verifies comment delimiters per file type.
+ *
+ * These assertions are deliberately exact. Earlier versions asserted
+ * `prefix in listOf("# ", "// ")`, which also accepted the `"// "` fallback and
+ * therefore passed even when the mapping was wrong or absent.
+ *
+ * The expected values must hold whether the style is resolved from the language
+ * ID or from the file extension, because the test IDE bundles no language
+ * plugins (nearly every fixture file reports `language.id == "TEXT"`) while a
+ * real IDE resolves a precise language. Both paths must agree.
+ */
 class BaseFileActionTest : BasePlatformTestCase() {
 
-    private fun createTestAction(): BaseFileAction {
-        return CopyFileWithInlineIssues()
+    private val action = CopyFileWithInlineIssues()
+
+    /** fileName -> (expected prefix, expected suffix) */
+    private val expectedStyles: Map<String, Pair<String, String>> = mapOf(
+        // Hash-comment languages
+        "test.py" to ("# " to ""),
+        "test.rb" to ("# " to ""),
+        "test.sh" to ("# " to ""),
+        "test.bash" to ("# " to ""),
+        "test.zsh" to ("# " to ""),
+        "test.yaml" to ("# " to ""),
+        "test.yml" to ("# " to ""),
+        "test.toml" to ("# " to ""),
+        "app.properties" to ("# " to ""),
+        "test.tf" to ("# " to ""),
+        "test.graphql" to ("# " to ""),
+        "test.pl" to ("# " to ""),
+        "test.ex" to ("# " to ""),
+        "test.r" to ("# " to ""),
+        "test.jl" to ("# " to ""),
+        "test.nim" to ("# " to ""),
+        "test.ps1" to ("# " to ""),
+        "Dockerfile" to ("# " to ""),
+        "Makefile" to ("# " to ""),
+
+        // Semicolon-comment languages
+        "config.ini" to ("; " to ""),
+        "test.clj" to ("; " to ""),
+        "test.lisp" to ("; " to ""),
+        "test.el" to ("; " to ""),
+        "test.ahk" to ("; " to ""),
+
+        // Percent-comment languages
+        "test.erl" to ("% " to ""),
+        "test.hrl" to ("% " to ""),
+
+        // Double-dash-comment languages
+        "test.sql" to ("-- " to ""),
+        "test.lua" to ("-- " to ""),
+        "test.hs" to ("-- " to ""),
+        "test.adb" to ("-- " to ""),
+        "test.vhd" to ("-- " to ""),
+
+        // Block comments - opener REQUIRES a matching closer
+        "test.html" to ("<!-- " to " -->"),
+        "test.xml" to ("<!-- " to " -->"),
+        "icon.svg" to ("<!-- " to " -->"),
+        "notes.md" to ("<!-- " to " -->"),
+        "test.css" to ("/* " to " */"),
+        "test.twig" to ("{# " to " #}"),
+        "test.jinja" to ("{# " to " #}"),
+        "test.j2" to ("{# " to " #}"),
+        "test.hbs" to ("{{! " to " }}"),
+        "test.erb" to ("<%# " to " %>"),
+        "test.ejs" to ("<%# " to " %>"),
+        "test.ml" to ("(* " to " *)"),
+        "test.mli" to ("(* " to " *)"),
+
+        // Line-comment languages (CSS preprocessors use // and must NOT inherit
+        // the CSS block-comment suffix)
+        "test.scss" to ("// " to ""),
+        "test.sass" to ("// " to ""),
+        "test.less" to ("// " to ""),
+        "Test.java" to ("// " to ""),
+        "Test.kt" to ("// " to ""),
+        "test.js" to ("// " to ""),
+        "test.ts" to ("// " to ""),
+        "test.go" to ("// " to ""),
+        "test.rs" to ("// " to ""),
+        "test.swift" to ("// " to ""),
+        "test.dart" to ("// " to ""),
+        "test.cs" to ("// " to ""),
+        "test.proto" to ("// " to ""),
+        "test.groovy" to ("// " to ""),
+        "test.sv" to ("// " to "")
+    )
+
+    fun testCommentStylePerFileType() {
+        val failures = mutableListOf<String>()
+
+        for ((fileName, expected) in expectedStyles) {
+            val (expectedPrefix, expectedSuffix) = expected
+            val psiFile = myFixture.configureByText(fileName, "placeholder")
+            val actualPrefix = action.getCommentPrefix(psiFile)
+            val actualSuffix = action.getCommentSuffix(psiFile)
+
+            if (actualPrefix != expectedPrefix || actualSuffix != expectedSuffix) {
+                failures += "$fileName (lang=${psiFile.language.id}): " +
+                    "expected '$expectedPrefix'…'$expectedSuffix' " +
+                    "but got '$actualPrefix'…'$actualSuffix'"
+            }
+        }
+
+        assertTrue(
+            "Wrong comment style for ${failures.size} file type(s):\n" +
+                failures.joinToString("\n") { "  - $it" },
+            failures.isEmpty()
+        )
     }
 
-    fun testCommentPrefixForAllLanguages() {
-        val action = createTestAction()
-        
-        // Python
-        val pythonFile = myFixture.configureByText("test.py", "print('hello')")
-        assertTrue("Python should use # prefix", 
-                   action.getCommentPrefix(pythonFile) in listOf("# ", "// "))
-        
-        // Ruby
-        val rubyFile = myFixture.configureByText("test.rb", "puts 'hello'")
-        assertTrue("Ruby should use # prefix", 
-                   action.getCommentPrefix(rubyFile) in listOf("# ", "// "))
-        
-        // Shell/Bash
-        val shellFile = myFixture.configureByText("test.sh", "echo 'hello'")
-        assertTrue("Shell should use # prefix", 
-                   action.getCommentPrefix(shellFile) in listOf("# ", "// "))
-        
-        // YAML
-        val yamlFile = myFixture.configureByText("test.yaml", "key: value")
-        assertTrue("YAML should use # prefix", 
-                   action.getCommentPrefix(yamlFile) in listOf("# ", "// "))
-        
-        // SQL
-        val sqlFile = myFixture.configureByText("test.sql", "SELECT * FROM users")
-        assertTrue("SQL should use -- prefix", 
-                   action.getCommentPrefix(sqlFile) in listOf("-- ", "// "))
-        
-        // Lua
-        val luaFile = myFixture.configureByText("test.lua", "print('hello')")
-        assertTrue("Lua should use -- prefix", 
-                   action.getCommentPrefix(luaFile) in listOf("-- ", "// "))
-        
-        // HTML
-        val htmlFile = myFixture.configureByText("test.html", "<div>Hello</div>")
-        assertTrue("HTML should use <!-- prefix", 
-                   action.getCommentPrefix(htmlFile) in listOf("<!-- ", "// "))
-        
-        // XML
-        val xmlFile = myFixture.configureByText("test.xml", "<root>data</root>")
-        assertTrue("XML should use <!-- prefix", 
-                   action.getCommentPrefix(xmlFile) in listOf("<!-- ", "// "))
-        
-        // CSS
-        val cssFile = myFixture.configureByText("test.css", "body { color: red; }")
-        assertTrue("CSS should use /* prefix", 
-                   action.getCommentPrefix(cssFile) in listOf("/* ", "// "))
-        
-        // Default case (Java, JavaScript, TypeScript, etc.)
-        val javaFile = myFixture.configureByText("Test.java", "public class Test {}")
-        assertEquals("// ", action.getCommentPrefix(javaFile))
-        
-        val jsFile = myFixture.configureByText("test.js", "console.log('hello')")
-        assertEquals("// ", action.getCommentPrefix(jsFile))
-        
-        val kotlinFile = myFixture.configureByText("Test.kt", "class Test")
-        assertEquals("// ", action.getCommentPrefix(kotlinFile))
-    }
-    
-    fun testCommentSuffixForAllLanguages() {
-        val action = createTestAction()
-        
-        // HTML should have a suffix
-        val htmlFile = myFixture.configureByText("test.html", "<div>Hello</div>")
-        assertTrue("HTML should have --> suffix", 
-                   action.getCommentSuffix(htmlFile) in listOf(" -->", ""))
-        
-        // XML should have a suffix
-        val xmlFile = myFixture.configureByText("test.xml", "<root>data</root>")
-        assertTrue("XML should have --> suffix", 
-                   action.getCommentSuffix(xmlFile) in listOf(" -->", ""))
-        
-        // CSS should have suffix
-        val cssFile = myFixture.configureByText("test.css", "body { color: red; }")
-        assertTrue("CSS should have */ suffix", 
-                   action.getCommentSuffix(cssFile) in listOf(" */", ""))
-        
-        // Others should have empty suffix
-        val javaFile = myFixture.configureByText("Test.java", "public class Test {}")
-        assertEquals("", action.getCommentSuffix(javaFile))
-        
-        val pythonFile = myFixture.configureByText("test.py", "print('hello')")
-        assertEquals("", action.getCommentSuffix(pythonFile))
-    }
-    
-    fun testCommentFormattingConsistency() {
-        val action = createTestAction()
-        val javaFile = myFixture.configureByText("Test.java", "public class Test {}")
-        
-        // Test comment prefix and suffix work correctly
-        assertEquals("// ", action.getCommentPrefix(javaFile))
-        assertEquals("", action.getCommentSuffix(javaFile))
-        
-        // Test with HTML file (different comment format)
-        val htmlFile = myFixture.configureByText("test.html", "<div>Hello</div>")
-        val htmlPrefix = action.getCommentPrefix(htmlFile)
+    /**
+     * Structural invariant: a prefix that opens a block or template comment must
+     * come with the delimiter that closes it, otherwise the emitted comment
+     * swallows the rest of the copied text.
+     */
+    fun testBlockCommentOpenersAlwaysHaveClosers() {
+        val requiredClosers = mapOf(
+            "<!-- " to " -->",
+            "/* " to " */",
+            "{# " to " #}",
+            "{{! " to " }}",
+            "<%# " to " %>",
+            "(* " to " *)"
+        )
+        val failures = mutableListOf<String>()
 
-        // Should get either HTML comments or fallback
-        assertTrue("HTML should use proper comment format", 
-                   htmlPrefix.contains("<!--") || htmlPrefix == "// ")
+        for (fileName in expectedStyles.keys) {
+            val psiFile = myFixture.configureByText(fileName, "placeholder")
+            val prefix = action.getCommentPrefix(psiFile)
+            val expectedCloser = requiredClosers[prefix] ?: continue
+            val actualSuffix = action.getCommentSuffix(psiFile)
+
+            if (actualSuffix != expectedCloser) {
+                failures += "$fileName: prefix '$prefix' opens a block comment " +
+                    "but suffix is '$actualSuffix' (expected '$expectedCloser')"
+            }
+        }
+
+        assertTrue(
+            "Unterminated block comments for ${failures.size} file type(s):\n" +
+                failures.joinToString("\n") { "  - $it" },
+            failures.isEmpty()
+        )
+    }
+
+    /** A line-comment prefix must never carry a block-comment closer. */
+    fun testLineCommentsHaveNoSuffix() {
+        val lineCommentPrefixes = setOf("// ", "# ", "-- ", "; ", "% ")
+        val failures = mutableListOf<String>()
+
+        for (fileName in expectedStyles.keys) {
+            val psiFile = myFixture.configureByText(fileName, "placeholder")
+            val prefix = action.getCommentPrefix(psiFile)
+            if (prefix !in lineCommentPrefixes) continue
+            val suffix = action.getCommentSuffix(psiFile)
+
+            if (suffix.isNotEmpty()) {
+                failures += "$fileName: line-comment prefix '$prefix' " +
+                    "must have an empty suffix but got '$suffix'"
+            }
+        }
+
+        assertTrue(
+            "Spurious suffix on line comments for ${failures.size} file type(s):\n" +
+                failures.joinToString("\n") { "  - $it" },
+            failures.isEmpty()
+        )
+    }
+
+    fun testUnknownExtensionFallsBackToCStyle() {
+        val psiFile = myFixture.configureByText("mystery.qqzz", "content")
+        assertEquals("// ", action.getCommentPrefix(psiFile))
+        assertEquals("", action.getCommentSuffix(psiFile))
+    }
+
+    fun testExtensionLookupIsCaseInsensitive() {
+        val lower = myFixture.configureByText("a.py", "x=1")
+        val upper = myFixture.configureByText("b.PY", "x=1")
+        assertEquals(
+            "Extension matching must ignore case",
+            action.getCommentPrefix(lower),
+            action.getCommentPrefix(upper)
+        )
+    }
+
+    fun testFormattedCommentIsWellFormedForBlockLanguages() {
+        val markdown = myFixture.configureByText("readme.md", "# Title")
+        val prefix = action.getCommentPrefix(markdown)
+        val suffix = action.getCommentSuffix(markdown)
+        val comment = "${prefix}ERROR: something broke$suffix"
+
+        assertEquals("<!-- ERROR: something broke -->", comment)
     }
 
     fun testActionThreadConfiguration() {
-        val action = createTestAction()
-        assertEquals("Should use BGT thread", 
-                     com.intellij.openapi.actionSystem.ActionUpdateThread.BGT, 
-                     action.actionUpdateThread)
-    }
-
-    fun testActionCreation() {
-        val action = createTestAction()
-        
-        // Test that the action can be created without issues
-        assertNotNull("Action should be created successfully", action)
-        
-        // Test that it extends BaseFileAction properly
-        assertTrue("Should extend BaseFileAction", true)
-    }
-
-    fun testSpecialLanguageHandling() {
-        val action = createTestAction()
-        
-        // Test INI files
-        val iniFile = myFixture.configureByText("config.ini", "[section]\nkey=value")
-        assertTrue("INI should use proper comment format", 
-                   action.getCommentPrefix(iniFile) in listOf("; ", "// "))
-        
-        // Test TOML files
-        val tomlFile = myFixture.configureByText("config.toml", "[section]\nkey = 'value'")
-        assertTrue("TOML should use # prefix", 
-                   action.getCommentPrefix(tomlFile) in listOf("# ", "// "))
-        
-        // Test Dockerfile
-        val dockerFile = myFixture.configureByText("Dockerfile", "FROM ubuntu:20.04")
-        assertTrue("Dockerfile should use # prefix", 
-                   action.getCommentPrefix(dockerFile) in listOf("# ", "// "))
-        
-        // Test Makefile
-        val makeFile = myFixture.configureByText("Makefile", "all:\n\techo 'hello'")
-        assertTrue("Makefile should use # prefix", 
-                   action.getCommentPrefix(makeFile) in listOf("# ", "// "))
-        
-        // Test Properties files
-        val propFile = myFixture.configureByText("app.properties", "key=value")
-        assertTrue("Properties should use # prefix", 
-                   action.getCommentPrefix(propFile) in listOf("# ", "// "))
-    }
-
-    fun testCSSVariants() {
-        val action = createTestAction()
-        
-        // Test SCSS
-        val scssFile = myFixture.configureByText("style.scss", "\$primary-color: #007bff;")
-        assertTrue("SCSS should use // prefix", 
-                   action.getCommentPrefix(scssFile) in listOf("// ", "/* "))
-        
-        // Test SASS
-        val sassFile = myFixture.configureByText("style.sass", "\$primary-color: #007bff")
-        assertTrue("SASS should use // prefix", 
-                   action.getCommentPrefix(sassFile) in listOf("// ", "/* "))
-        
-        // Test LESS
-        val lessFile = myFixture.configureByText("style.less", "@primary-color: #007bff;")
-        assertTrue("LESS should use // prefix", 
-                   action.getCommentPrefix(lessFile) in listOf("// ", "/* "))
-    }
-
-    fun testLanguageIdCaseInsensitivity() {
-        val action = createTestAction()
-        
-        // Test that language detection is case-insensitive
-        val javaFile = myFixture.configureByText("Test.java", "public class Test {}")
-        val prefix = action.getCommentPrefix(javaFile)
-        
-        // Should work regardless of case
-        assertTrue("Should handle language detection properly", 
-                   prefix.isNotEmpty())
-    }
-
-    fun testEdgeCasesInCommentGeneration() {
-        val action = createTestAction()
-        
-        // Test with very small files
-        val smallFile = myFixture.configureByText("tiny.java", "}")
-        assertEquals("// ", action.getCommentPrefix(smallFile))
-        
-        // Test with files that might have ambiguous extensions
-        val ambiguousFile = myFixture.configureByText("file.txt", "some content")
-        val prefix = action.getCommentPrefix(ambiguousFile)
-        assertTrue("Should have a default prefix", prefix.isNotEmpty())
+        assertEquals(
+            "Should use BGT thread",
+            com.intellij.openapi.actionSystem.ActionUpdateThread.BGT,
+            action.actionUpdateThread
+        )
     }
 }

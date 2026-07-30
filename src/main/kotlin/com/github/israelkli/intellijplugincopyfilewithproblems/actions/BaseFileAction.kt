@@ -19,181 +19,263 @@ abstract class BaseFileAction : AnAction() {
 
     protected val problemDetectionService = ProblemDetectionService()
 
+    /**
+     * Opening and closing comment delimiters, kept together so they can never
+     * diverge. Emitting an opener without its closer turns the rest of the
+     * copied text into a comment.
+     */
+    data class CommentStyle(val prefix: String, val suffix: String = "")
+
     companion object {
         const val LARGE_FILE_THRESHOLD = 500
+
+        private val SLASH = CommentStyle("// ")
+        private val HASH = CommentStyle("# ")
+        private val DASH = CommentStyle("-- ")
+        private val SEMICOLON = CommentStyle("; ")
+        private val PERCENT = CommentStyle("% ")
+        private val ANGLE_BANG = CommentStyle("<!-- ", " -->")
+        private val SLASH_STAR = CommentStyle("/* ", " */")
+        private val BRACE_HASH = CommentStyle("{# ", " #}")
+        private val MUSTACHE = CommentStyle("{{! ", " }}")
+        private val ERB = CommentStyle("<%# ", " %>")
+        private val PAREN_STAR = CommentStyle("(* ", " *)")
+
+        // Layer 1: exact language ID (lowercased). Authoritative when the
+        // matching language plugin is installed.
+        private val STYLE_BY_LANGUAGE_ID: Map<String, CommentStyle> = mapOf(
+            "python" to HASH,
+            "ruby" to HASH,
+            "shell" to HASH,
+            "shellscript" to HASH,
+            "bash" to HASH,
+            "zsh" to HASH,
+            "yaml" to HASH,
+            "toml" to HASH,
+            "dockerfile" to HASH,
+            "makefile" to HASH,
+            "properties" to HASH,
+            "elixir" to HASH,
+            "julia" to HASH,
+            "nim" to HASH,
+            "powershell" to HASH,
+            "graphql" to HASH,
+            "hcl" to HASH,
+            "r" to HASH,
+            "ini" to SEMICOLON,
+            "clojure" to SEMICOLON,
+            "lisp" to SEMICOLON,
+            "emacslisp" to SEMICOLON,
+            "erlang" to PERCENT,
+            "sql" to DASH,
+            "mysql" to DASH,
+            "postgresql" to DASH,
+            "lua" to DASH,
+            "haskell" to DASH,
+            "ada" to DASH,
+            "vhdl" to DASH,
+            "html" to ANGLE_BANG,
+            "xhtml" to ANGLE_BANG,
+            "xml" to ANGLE_BANG,
+            "svg" to ANGLE_BANG,
+            "markdown" to ANGLE_BANG,
+            "css" to SLASH_STAR,
+            // CSS preprocessors support line comments, so they must not inherit
+            // the CSS block-comment delimiters.
+            "scss" to SLASH,
+            "sass" to SLASH,
+            "less" to SLASH,
+            "twig" to BRACE_HASH,
+            "jinja" to BRACE_HASH,
+            "handlebars" to MUSTACHE,
+            "ocaml" to PAREN_STAR
+        )
+
+        // Layer 2: well-known file names that carry no extension, so Layer 3
+        // cannot classify them.
+        private val STYLE_BY_FILENAME: Map<String, CommentStyle> = mapOf(
+            "dockerfile" to HASH,
+            "containerfile" to HASH,
+            "makefile" to HASH,
+            "gnumakefile" to HASH,
+            "cmakelists.txt" to HASH,
+            "gemfile" to HASH,
+            "rakefile" to HASH,
+            "podfile" to HASH,
+            "brewfile" to HASH,
+            "procfile" to HASH,
+            "vagrantfile" to HASH,
+            ".gitignore" to HASH,
+            ".gitattributes" to HASH,
+            ".dockerignore" to HASH,
+            ".editorconfig" to HASH,
+            ".env" to HASH,
+            ".bashrc" to HASH,
+            ".zshrc" to HASH,
+            ".profile" to HASH,
+            "jenkinsfile" to SLASH
+        )
+
+        // Layer 3: file extension (lowercased). This is the fallback for IDEs
+        // that do not bundle the relevant language plugin, in which case
+        // `language.id` reports "TEXT". Every entry must resolve to the same
+        // style as its Layer 1 counterpart.
+        private val STYLE_BY_EXTENSION: Map<String, CommentStyle> = mapOf(
+            "py" to HASH,
+            "pyi" to HASH,
+            "rb" to HASH,
+            "sh" to HASH,
+            "bash" to HASH,
+            "zsh" to HASH,
+            "fish" to HASH,
+            "yaml" to HASH,
+            "yml" to HASH,
+            "toml" to HASH,
+            "properties" to HASH,
+            "conf" to HASH,
+            "cfg" to HASH,
+            "tf" to HASH,
+            "tfvars" to HASH,
+            "hcl" to HASH,
+            "graphql" to HASH,
+            "gql" to HASH,
+            "ex" to HASH,
+            "exs" to HASH,
+            "pl" to HASH,
+            "pm" to HASH,
+            "t" to HASH,
+            "raku" to HASH,
+            "rakumod" to HASH,
+            "r" to HASH,
+            "jl" to HASH,
+            "nim" to HASH,
+            "nimble" to HASH,
+            "ps1" to HASH,
+            "psm1" to HASH,
+            "psd1" to HASH,
+            "ini" to SEMICOLON,
+            "clj" to SEMICOLON,
+            "cljs" to SEMICOLON,
+            "cljc" to SEMICOLON,
+            "edn" to SEMICOLON,
+            "lisp" to SEMICOLON,
+            "el" to SEMICOLON,
+            "scm" to SEMICOLON,
+            "ahk" to SEMICOLON,
+            "au3" to SEMICOLON,
+            "erl" to PERCENT,
+            "hrl" to PERCENT,
+            "tex" to PERCENT,
+            "sql" to DASH,
+            "lua" to DASH,
+            "hs" to DASH,
+            "lhs" to DASH,
+            "adb" to DASH,
+            "ads" to DASH,
+            "vhd" to DASH,
+            "vhdl" to DASH,
+            "elm" to DASH,
+            "html" to ANGLE_BANG,
+            "htm" to ANGLE_BANG,
+            "xhtml" to ANGLE_BANG,
+            "xml" to ANGLE_BANG,
+            "xsd" to ANGLE_BANG,
+            "xsl" to ANGLE_BANG,
+            "svg" to ANGLE_BANG,
+            "md" to ANGLE_BANG,
+            "markdown" to ANGLE_BANG,
+            "css" to SLASH_STAR,
+            "scss" to SLASH,
+            "sass" to SLASH,
+            "less" to SLASH,
+            "styl" to SLASH,
+            "twig" to BRACE_HASH,
+            "jinja" to BRACE_HASH,
+            "jinja2" to BRACE_HASH,
+            "j2" to BRACE_HASH,
+            "hbs" to MUSTACHE,
+            "handlebars" to MUSTACHE,
+            "mustache" to MUSTACHE,
+            "erb" to ERB,
+            "ejs" to ERB,
+            "ml" to PAREN_STAR,
+            "mli" to PAREN_STAR,
+            "proto" to SLASH,
+            "gradle" to SLASH,
+            "groovy" to SLASH,
+            "dart" to SLASH,
+            "swift" to SLASH,
+            "rs" to SLASH,
+            "go" to SLASH,
+            "zig" to SLASH,
+            "vue" to SLASH,
+            "svelte" to SLASH,
+            "astro" to SLASH,
+            "blade" to SLASH,
+            "cs" to SLASH,
+            "fs" to SLASH,
+            "fsx" to SLASH,
+            "m" to SLASH,
+            "mm" to SLASH,
+            "pas" to SLASH,
+            "pp" to SLASH,
+            "v" to SLASH,
+            "sv" to SLASH,
+            "svh" to SLASH
+        )
+
+        // Layer 4: language ID fragments, restricted to identifiers that cannot
+        // produce false positives (e.g. "cpp" matching "objective-cpp").
+        private val STYLE_BY_LANGUAGE_FRAGMENT: List<Pair<String, CommentStyle>> = listOf(
+            "kotlin" to SLASH,
+            "typescript" to SLASH,
+            "javascript" to SLASH,
+            "php" to SLASH,
+            "csharp" to SLASH,
+            "scala" to SLASH,
+            "groovy" to SLASH,
+            "objectivecpp" to SLASH,
+            "ruby" to HASH,
+            "python" to HASH,
+            "perl" to HASH,
+            "coffeescript" to HASH,
+            "terraform" to HASH
+        )
     }
-    
+
     override fun getActionUpdateThread(): ActionUpdateThread = ActionUpdateThread.BGT
-    
+
     protected fun copyToClipboard(content: String) {
         val selection = StringSelection(content)
         CopyPasteManager.getInstance().setContents(selection)
     }
-    
-    fun getCommentPrefix(psiFile: PsiFile): String {
-        val language = psiFile.language
-        val languageId = language.id.lowercase()
-        val extension = psiFile.virtualFile?.extension?.lowercase() ?: ""
 
-        // Layer 1: exact language ID match
-        val exactMatch = LANGUAGE_EXACT[languageId]
-        if (exactMatch != null) return exactMatch
+    private fun resolveCommentStyle(psiFile: PsiFile): CommentStyle {
+        val languageId = psiFile.language.id.lowercase()
+        val virtualFile = psiFile.virtualFile
+        val fileName = virtualFile?.name?.lowercase() ?: ""
+        val extension = virtualFile?.extension?.lowercase() ?: ""
 
-        // Layer 2: file extension match
-        val extensionMatch = LANGUAGE_BY_EXTENSION[extension]
-        if (extensionMatch != null) return extensionMatch
+        STYLE_BY_LANGUAGE_ID[languageId]?.let { return it }
+        STYLE_BY_FILENAME[fileName]?.let { return it }
+        STYLE_BY_EXTENSION[extension]?.let { return it }
 
-        // Layer 3: language ID substring check (restricted to safe identifiers
-        // that can't produce false positives, e.g. "cpp" matching "objective-cpp")
-        for ((key, prefix) in LANGUAGE_SUBSTRING) {
-            if (languageId.contains(key)) return prefix
+        for ((fragment, style) in STYLE_BY_LANGUAGE_FRAGMENT) {
+            if (languageId.contains(fragment)) return style
         }
 
-        // Layer 4: default C-style
-        return "// "
+        return SLASH
     }
 
-    private val LANGUAGE_EXACT = mapOf(
-        "python"        to "# ",
-        "ruby"          to "# ",
-        "shell"         to "# ",
-        "bash"          to "# ",
-        "yaml"          to "# ",
-        "toml"          to "# ",
-        "dockerfile"    to "# ",
-        "makefile"      to "# ",
-        "properties"    to "# ",
-        "ini"           to "; ",
-        "sql"           to "-- ",
-        "lua"           to "-- ",
-        "haskell"       to "-- ",
-        "html"          to "<!-- ",
-        "xml"           to "<!-- ",
-        "css"           to "/* ",
-        "scss"          to "// ",
-        "sass"          to "// ",
-        "less"          to "// "
-    )
+    fun getCommentPrefix(psiFile: PsiFile): String = resolveCommentStyle(psiFile).prefix
 
-    // File extensions that differ from language ID. Extensions that already
-    // match an exact-language ID (e.g. ".py" → "python") are omitted since
-    // Layer 1 handles those via the language object.
-    private val LANGUAGE_BY_EXTENSION = mapOf(
-        // Languages where IntelliJ may not report a precise language ID
-        "sh"            to "# ",
-        "bash"          to "# ",
-        "zsh"           to "# ",
-        "yaml"          to "# ",
-        "yml"           to "# ",
-        "toml"          to "# ",
-        "properties"    to "# ",
-        "ini"           to "; ",
-        "conf"          to "# ",
-        "cfg"           to "# ",
-        "tf"            to "# ",
-        "hcl"           to "# ",
-        "graphql"       to "# ",
-        "gql"           to "# ",
-        "proto"         to "// ",
-        "gradle"        to "// ",
-        "groovy"        to "// ",
-        "dart"          to "// ",
-        "swift"         to "// ",
-        "rs"            to "// ",
-        "go"            to "// ",
-        "zig"           to "// ",
-        "v"             to "// ",
-        "vue"           to "// ",
-        "svelte"        to "// ",
-        "astro"         to "// ",
-        "blade"         to "// ",
-        "twig"          to "{# ",
-        "jinja"         to "{# ",
-        "j2"            to "{# ",
-        "hbs"           to "{{! ",
-        "erb"           to "<%# ",
-        "ejs"           to "<%# ",
-        "md"            to "<!-- ",
-        "markdown"      to "<!-- ",
-        "svg"           to "<!-- ",
-        "cs"            to "// ",
-        "fs"            to "// ",
-        "fsx"           to "// ",
-        "ex"            to "# ",
-        "exs"           to "# ",
-        "erl"           to "% ",
-        "hrl"           to "% ",
-        "clj"           to "; ",
-        "cljs"          to "; ",
-        "lisp"          to "; ",
-        "el"            to "; ",
-        "r"             to "# ",
-        "R"             to "# ",
-        "jl"            to "# ",
-        "m"             to "// ",
-        "mm"            to "// ",
-        "ml"            to "(* ",
-        "mli"           to "(* ",
-        "hs"            to "-- ",
-        "lhs"           to "-- ",
-        "adb"           to "-- ",
-        "ads"           to "-- ",
-        "pas"           to "// ",
-        "pp"            to "// ",
-        "pl"            to "# ",
-        "pm"            to "# ",
-        "t"             to "# ",
-        "raku"          to "# ",
-        "rakumod"       to "# ",
-        "nim"           to "# ",
-        "nimble"        to "# ",
-        "vhd"           to "-- ",
-        "vhdl"          to "-- ",
-        "vhd"           to "-- ",
-        "v"             to "// ",
-        "sv"            to "// ",
-        "svh"           to "// ",
-        "ahk"           to "; ",
-        "au3"           to "; ",
-        "ps1"           to "# ",
-        "psm1"          to "# ",
-        "psd1"          to "# "
-    )
+    fun getCommentSuffix(psiFile: PsiFile): String = resolveCommentStyle(psiFile).suffix
 
-    private val LANGUAGE_SUBSTRING = mapOf(
-        "kotlin"        to "// ",
-        "typescript"    to "// ",
-        "javascript"    to "// ",
-        "php"           to "// ",
-        "csharp"        to "// ",
-        "scala"         to "// ",
-        "groovy"        to "// ",
-        "objectivecpp"  to "// ",
-        "ruby"          to "# ",
-        "python"        to "# ",
-        "perl"          to "# ",
-        "coffeescript"  to "# ",
-        "terraform"     to "# "
-    )
-    
-    fun getCommentSuffix(psiFile: PsiFile): String {
-        val language = psiFile.language
-        val languageId = language.id.lowercase()
-        
-        return when {
-            languageId.contains("html") -> " -->"
-            languageId.contains("xml") -> " -->"
-            languageId.contains("css") -> " */"
-            else -> ""
-        }
-    }
-    
     protected fun formatComment(psiFile: PsiFile, severityPrefix: String, message: String): String {
-        val prefix = getCommentPrefix(psiFile)
-        val suffix = getCommentSuffix(psiFile)
-        return "$prefix$severityPrefix: $message$suffix"
+        val style = resolveCommentStyle(psiFile)
+        return "${style.prefix}$severityPrefix: $message${style.suffix}"
     }
-    
+
     private fun filterIssues(issues: List<ProblemDetectionService.IssueInfo>): List<ProblemDetectionService.IssueInfo> {
         val settings = PluginSettings.getInstance().state
         return issues.filter { issue ->
@@ -215,18 +297,10 @@ abstract class BaseFileAction : AnAction() {
     ) {
         for (issue in filterIssues(issues)) {
             builder.appendLine()
-            val severityPrefix = when (issue.severity) {
-                "ERROR" -> "ERROR"
-                "WARNING" -> "WARNING"
-                "WEAK_WARNING" -> "WEAK_WARNING"
-                "INFO" -> "INFO"
-                "INSPECTION" -> "INSPECTION"
-                else -> issue.severity
-            }
-            builder.append(formatComment(psiFile, severityPrefix, issue.message))
+            builder.append(formatComment(psiFile, issue.severity, issue.message))
         }
     }
-    
+
     protected fun buildContentWithProblems(
         psiFile: PsiFile,
         document: com.intellij.openapi.editor.Document,
