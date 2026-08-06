@@ -81,8 +81,11 @@ class ProblemDetectionService {
             allIssues.addAll(findPsiProblems(psiFile, startOffset, endOffset))
         }
 
+        // Highlighter and PSI offsets can outlive the text they were computed
+        // against, so an offset may point past the end of the current document.
+        // getLineNumber throws on those, which would abort the entire copy.
         return allIssues
-            .groupBy { document.getLineNumber(it.startOffset) }
+            .groupBy { document.getLineNumber(it.startOffset.coerceIn(0, document.textLength)) }
             .mapValues { (_, issues) ->
                 issues.distinctBy { "${it.severity}:${it.message}" }
             }

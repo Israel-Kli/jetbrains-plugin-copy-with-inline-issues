@@ -1,5 +1,6 @@
 package com.github.israelkli.intellijplugincopyfilewithproblems.services
 
+import com.intellij.openapi.editor.EditorFactory
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
 
 class ProblemDetectionServiceTest : BasePlatformTestCase() {
@@ -340,5 +341,34 @@ class ProblemDetectionServiceTest : BasePlatformTestCase() {
             val issues = service.findProblems(psiFile, 0, javaCode.length)
             assertNotNull("Issues should not be null on call $it", issues)
         }
+    }
+
+    fun testDoesNotThrowWhenIssueOffsetsExceedDocumentLength() {
+        val xmlCode = """
+            <root>
+                <unclosed>
+            </root>
+        """.trimIndent()
+
+        val psiFile = myFixture.configureByText("stale.xml", xmlCode)
+        val realDocument = psiFile.viewProvider.document ?: throw AssertionError("Document should exist")
+
+        val onRealDocument = service.findProblemsForFile(psiFile, realDocument, 0, xmlCode.length)
+        assertFalse(
+            "Precondition: the fixture must yield at least one issue, otherwise this test proves nothing",
+            onRealDocument.isEmpty()
+        )
+
+        // Pairing the PSI with a shorter document reproduces an edit landing while
+        // analysis is in flight: the issue offsets then point past the end of the
+        // current text, which is exactly what makes getLineNumber throw.
+        val truncatedDocument = EditorFactory.getInstance().createDocument("")
+        val issuesByLine = service.findProblemsForFile(psiFile, truncatedDocument, 0, xmlCode.length)
+
+        assertEquals(
+            "Out-of-range offsets must clamp into the document instead of throwing",
+            setOf(0),
+            issuesByLine.keys
+        )
     }
 }

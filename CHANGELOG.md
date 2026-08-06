@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- **Copy could fail outright on a file edited while analysis was running** — Issue positions come from the IDE markup model and the PSI tree, and both can briefly describe a longer text than the document currently holds, for example when an edit lands while analysis is still in flight. Converting such a position to a line number threw `IndexOutOfBoundsException` from outside the guarded block, so the whole copy was aborted and nothing reached the clipboard. Out-of-range positions are now clamped into the document.
+
 ## [1.2.4] - 2026-07-31
 
 ### Fixed
