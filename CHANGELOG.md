@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Unterminated block comments** — Ten file types opened a block or template comment without ever emitting its closing delimiter, so everything after the inserted comment was swallowed by the reader. Affected `.md`, `.svg`, `.twig`, `.jinja`, `.j2`, `.hbs`, `.erb`, `.ejs`, `.ml`, and `.mli`. Markdown was the worst case: `<!-- ERROR: …` with no `-->` hid the entire remainder of the copied file in any renderer, defeating the point of pasting into an AI assistant.
 - **Spurious comment terminator on CSS preprocessors** — SCSS resolved to the `// ` line-comment prefix but still received CSS's ` */` suffix, producing `// ERROR: message */`. The prefix and the suffix were chosen by two independent code paths, so any language ID merely *containing* `css`, `html`, or `xml` could inherit a mismatched terminator (XHTML, for example, produced `// ERROR: message -->`).
 - **Wrong comment style when a language plugin is not installed** — The file-extension fallback deliberately omitted extensions whose language ID was already mapped, but that layer exists precisely for IDEs where the language plugin is absent. As a result `.py` and `.rb` emitted `// ` instead of `# `, `.css` emitted `// ` instead of `/* … */`, and `.sql` and `.lua` emitted `// ` instead of `-- `. Every language-ID entry now has a matching extension entry.
+
 - **Extension-less file names** — `Dockerfile`, `Makefile`, `CMakeLists.txt`, `Gemfile`, `Rakefile`, `Jenkinsfile`, `.gitignore`, `.dockerignore`, `.editorconfig`, and `.env` now resolve to the correct comment style instead of falling through to `// `. These files have no extension, so the extension layer could never classify them.
 - **Unreachable and duplicated mapping entries** — Removed the uppercase `"R"` key, which could never match because lookups are lowercased, and the duplicated `"v"` and `"vhd"` keys, which were silently shadowed.
 
@@ -211,7 +212,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - IntelliJ IDEA 2024.2+ (Build 242+)
 - Compatible with all IntelliJ-based IDEs
 
-[Unreleased]: https://github.com/Israel-Kli/jetbrains-plugin-copy-with-inline-issues/compare/v1.2.0...HEAD
+[Unreleased]: https://github.com/Israel-Kli/jetbrains-plugin-copy-with-inline-issues/compare/v1.2.4...HEAD
+[1.2.4]: https://github.com/Israel-Kli/jetbrains-plugin-copy-with-inline-issues/compare/v1.2.3...v1.2.4
+[1.2.3]: https://github.com/Israel-Kli/jetbrains-plugin-copy-with-inline-issues/compare/v1.2.2...v1.2.3
+[1.2.2]: https://github.com/Israel-Kli/jetbrains-plugin-copy-with-inline-issues/compare/v1.2.1...v1.2.2
+[1.2.1]: https://github.com/Israel-Kli/jetbrains-plugin-copy-with-inline-issues/compare/v1.2.0...v1.2.1
 [1.2.0]: https://github.com/Israel-Kli/jetbrains-plugin-copy-with-inline-issues/compare/v1.1.3...v1.2.0
 [1.1.3]: https://github.com/Israel-Kli/jetbrains-plugin-copy-with-inline-issues/compare/v1.1.2...v1.1.3
 [1.1.2]: https://github.com/Israel-Kli/jetbrains-plugin-copy-with-inline-issues/compare/v1.1.1...v1.1.2
