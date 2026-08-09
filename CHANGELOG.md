@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.5] - 2026-08-09
+
 ### Fixed
 
 - **Copy could fail outright on a file edited while analysis was running** — Issue positions come from the IDE markup model and the PSI tree, and both can briefly describe a longer text than the document currently holds, for example when an edit lands while analysis is still in flight. Converting such a position to a line number threw `IndexOutOfBoundsException` from outside the guarded block, so the whole copy was aborted and nothing reached the clipboard. Out-of-range positions are now clamped into the document.
@@ -216,7 +218,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - IntelliJ IDEA 2024.2+ (Build 242+)
 - Compatible with all IntelliJ-based IDEs
 
-[Unreleased]: https://github.com/Israel-Kli/jetbrains-plugin-copy-with-inline-issues/compare/v1.2.4...HEAD
+[Unreleased]: https://github.com/Israel-Kli/jetbrains-plugin-copy-with-inline-issues/compare/v1.2.5...HEAD
+[1.2.5]: https://github.com/Israel-Kli/jetbrains-plugin-copy-with-inline-issues/compare/v1.2.4...v1.2.5
 [1.2.4]: https://github.com/Israel-Kli/jetbrains-plugin-copy-with-inline-issues/compare/v1.2.3...v1.2.4
 [1.2.3]: https://github.com/Israel-Kli/jetbrains-plugin-copy-with-inline-issues/compare/v1.2.2...v1.2.3
 [1.2.2]: https://github.com/Israel-Kli/jetbrains-plugin-copy-with-inline-issues/compare/v1.2.1...v1.2.2
