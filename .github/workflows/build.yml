@@ -61,11 +61,11 @@ jobs:
 
           echo "DEBUG: Detected version: $VERSION"
           
-          if [ "$VERSION" = "Unreleased" ]; then
-            CHANGELOG="$(./gradlew getChangelog --unreleased --no-header --console=plain -q)"
-          else
-            CHANGELOG=""
-          fi
+          # $VERSION is the plugin version (e.g. 1.2.5), so the former
+          # `[ "$VERSION" = "Unreleased" ]` guard never matched and every draft
+          # release was created with an empty body. Notes always come from the
+          # Unreleased section; patchChangelog promotes them on publish.
+          CHANGELOG="$(./gradlew getChangelog --unreleased --no-header --console=plain -q)"
 
           echo "version=$VERSION" >> $GITHUB_OUTPUT
           echo "pluginVerifierHomeDir=~/.pluginVerifier" >> $GITHUB_OUTPUT
