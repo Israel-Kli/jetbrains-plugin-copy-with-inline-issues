@@ -379,16 +379,18 @@ abstract class BaseFileAction : AnAction() {
         if (lineCount < LARGE_FILE_THRESHOLD) return true
 
         val displayName = fileName ?: "file"
-        val result = ApplicationManager.getApplication().runReadAction(com.intellij.openapi.util.Computable {
-            Messages.showYesNoDialog(
-                "The selected range in \"$displayName\" has $lineCount lines. " +
-                    "Running IDE inspections on a large selection may take several seconds and cause brief UI lag.\n\nContinue?",
-                "Large Selection — Copy with Inline Issues",
-                "Copy Anyway",
-                "Cancel",
-                Messages.getWarningIcon()
-            )
-        })
+        // Called from actionPerformed, which always runs on the EDT and therefore
+        // already has implicit read access. Wrapping the dialog in an explicit
+        // read action pumped a nested event loop while holding the read lock,
+        // which the platform forbids; showing the dialog needs no read access.
+        val result = Messages.showYesNoDialog(
+            "The selected range in \"$displayName\" has $lineCount lines. " +
+                "Running IDE inspections on a large selection may take several seconds and cause brief UI lag.\n\nContinue?",
+            "Large Selection — Copy with Inline Issues",
+            "Copy Anyway",
+            "Cancel",
+            Messages.getWarningIcon()
+        )
         return result == Messages.YES
     }
 

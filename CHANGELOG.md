@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- **Large-selection confirmation dialog no longer runs inside a read action** — The prompt shown before copying a selection above 500 lines was wrapped in an explicit read action. A modal dialog pumps a nested event loop, and doing so while holding the read lock is a documented platform anti-pattern that can stall other IDE activity. The action already runs on the EDT with implicit read access and the dialog needs no read access at all, so the wrapper was removed. The prompt itself is unchanged.
+
 ## [1.2.5] - 2026-08-09
 
 ### Fixed
