@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.7] - 2026-08-19
+
 ### Changed
 
 - **Syntax-error scanning no longer depends on where the scan starts** — The scan derived its root element from the offset it was asked to begin at, so it silently did nothing whenever that lookup came back empty, which is what happens at and past the end of a file. It now walks the file directly. A second, bounded pass that re-inspected up to ten elements was also removed, after confirming it could only ever re-find elements the main walk already covers. Reported issues are unchanged for every range the plugin actually asks for: 51 file and range combinations were diffed against the previous implementation, and the only difference is that negative start offsets, which the plugin never produces, now behave sensibly instead of returning nothing.
@@ -228,7 +230,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - IntelliJ IDEA 2024.2+ (Build 242+)
 - Compatible with all IntelliJ-based IDEs
 
-[Unreleased]: https://github.com/Israel-Kli/jetbrains-plugin-copy-with-inline-issues/compare/v1.2.6...HEAD
+[Unreleased]: https://github.com/Israel-Kli/jetbrains-plugin-copy-with-inline-issues/compare/v1.2.7...HEAD
+[1.2.7]: https://github.com/Israel-Kli/jetbrains-plugin-copy-with-inline-issues/compare/v1.2.6...v1.2.7
 [1.2.6]: https://github.com/Israel-Kli/jetbrains-plugin-copy-with-inline-issues/compare/v1.2.5...v1.2.6
 [1.2.5]: https://github.com/Israel-Kli/jetbrains-plugin-copy-with-inline-issues/compare/v1.2.4...v1.2.5
 [1.2.4]: https://github.com/Israel-Kli/jetbrains-plugin-copy-with-inline-issues/compare/v1.2.3...v1.2.4
