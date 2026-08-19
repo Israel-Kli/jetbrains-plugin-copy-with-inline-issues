@@ -165,35 +165,28 @@ class ProblemDetectionService {
         val problems = mutableListOf<IssueInfo>()
 
         try {
-            val rootElement = psiFile.findElementAt(startOffset)?.containingFile
-            if (rootElement != null) {
-                val errorElements = PsiTreeUtil.findChildrenOfType(rootElement, PsiErrorElement::class.java)
-                for (errorElement in errorElements) {
-                    val errorStart = errorElement.textRange.startOffset
-                    val errorEnd = errorElement.textRange.endOffset
+            // Walk the file directly. Deriving the root through findElementAt
+            // skipped this scan entirely whenever it returned null, which is what
+            // it does at and past the end of the file.
+            val errorElements = PsiTreeUtil.findChildrenOfType(psiFile, PsiErrorElement::class.java)
+            for (errorElement in errorElements) {
+                val errorStart = errorElement.textRange.startOffset
+                val errorEnd = errorElement.textRange.endOffset
 
-                    if (errorStart < endOffset && errorEnd > startOffset) {
-                        createIssueFromPsiError(errorElement)?.let { problems.add(it) }
-                    }
+                if (errorStart < endOffset && errorEnd > startOffset) {
+                    createIssueFromPsiError(errorElement)?.let { problems.add(it) }
                 }
             }
 
+            // Retained as a safety net: the overlap test above is half-open and so
+            // matches nothing for an empty range (a selection covering a single
+            // blank line). It only contributes when a parser exposes the error
+            // element itself as the leaf at this offset, which the bundled XML and
+            // JSON parsers never do.
             val elementAtStart = psiFile.findElementAt(startOffset)
             if (elementAtStart is PsiErrorElement) {
                 createIssueFromPsiError(elementAtStart)?.let { problems.add(it) }
             }
-
-            var offset = startOffset
-            var elementCount = 0
-            while (offset < endOffset && elementCount < 10) {
-                val element = psiFile.findElementAt(offset)
-                if (element is PsiErrorElement) {
-                    createIssueFromPsiError(element)?.let { problems.add(it) }
-                }
-                offset += maxOf(1, element?.textLength ?: 1)
-                elementCount++
-            }
-
         } catch (_: Exception) {
         }
 

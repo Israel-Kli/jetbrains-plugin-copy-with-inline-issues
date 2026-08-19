@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- **Syntax-error scanning no longer depends on where the scan starts** — The scan derived its root element from the offset it was asked to begin at, so it silently did nothing whenever that lookup came back empty, which is what happens at and past the end of a file. It now walks the file directly. A second, bounded pass that re-inspected up to ten elements was also removed, after confirming it could only ever re-find elements the main walk already covers. Reported issues are unchanged for every range the plugin actually asks for: 51 file and range combinations were diffed against the previous implementation, and the only difference is that negative start offsets, which the plugin never produces, now behave sensibly instead of returning nothing.
+
 ## [1.2.6] - 2026-08-16
 
 ### Fixed

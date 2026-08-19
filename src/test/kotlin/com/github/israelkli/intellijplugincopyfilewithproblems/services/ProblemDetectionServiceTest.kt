@@ -1,6 +1,8 @@
 package com.github.israelkli.intellijplugincopyfilewithproblems.services
 
 import com.intellij.openapi.editor.EditorFactory
+import com.intellij.psi.PsiErrorElement
+import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
 
 class ProblemDetectionServiceTest : BasePlatformTestCase() {
@@ -369,6 +371,42 @@ class ProblemDetectionServiceTest : BasePlatformTestCase() {
             "Out-of-range offsets must clamp into the document instead of throwing",
             setOf(0),
             issuesByLine.keys
+        )
+    }
+
+    fun testWholeFileScanReportsSyntaxError() {
+        val xmlCode = "<root>\n    <unclosed>\n</root>"
+        val psiFile = myFixture.configureByText("scan.xml", xmlCode)
+        val document = psiFile.viewProvider.document ?: throw AssertionError("Document should exist")
+
+        val messages = service.findProblemsForFile(psiFile, document, 0, document.textLength)
+            .values.flatten().map { it.message }
+
+        assertTrue(
+            "Scanning the whole file should report the unclosed tag, got $messages",
+            messages.any { it.contains("not closed") }
+        )
+    }
+
+    fun testDuplicateFindingsAreCollapsedPerLine() {
+        // Several parser errors land on the same line here, and a single element can
+        // be reached by more than one scan path.
+        val xmlCode = "<root>\n\n</root>\n<<<"
+        val psiFile = myFixture.configureByText("dupes.xml", xmlCode)
+        val document = psiFile.viewProvider.document ?: throw AssertionError("Document should exist")
+
+        val rawErrorCount = PsiTreeUtil.findChildrenOfType(psiFile, PsiErrorElement::class.java).size
+        assertTrue("Precondition: fixture must produce several error elements", rawErrorCount > 1)
+
+        val issuesByLine = service.findProblemsForFile(psiFile, document, 0, document.textLength)
+        for ((line, issues) in issuesByLine) {
+            val keys = issues.map { "${it.severity}:${it.message}" }
+            assertEquals("Line $line reported the same finding twice: $keys", keys.distinct().size, keys.size)
+        }
+
+        assertTrue(
+            "Expected $rawErrorCount error elements to collapse into fewer reported findings",
+            issuesByLine.values.sumOf { it.size } < rawErrorCount
         )
     }
 }
