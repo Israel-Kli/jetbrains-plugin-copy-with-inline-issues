@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.8] - 2026-08-25
+
 ### Fixed
 
 - **Errors sitting on the edge of a selection were dropped** — Parsers report faults such as an unclosed tag or a missing token as a zero-width position rather than as a span of text, and the test deciding whether an issue falls inside the copied region could never match a zero-width position on the region's boundary. Copying the exact line that carried such an error produced the code with no comment attached, even though copying the whole file reported it correctly, so the two actions disagreed about the same file. Zero-width positions are now matched by position and both actions agree. Whole-file output is unchanged, and across 628 file and range combinations diffed against the previous implementation no combination reported fewer issues than before.
@@ -234,7 +236,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - IntelliJ IDEA 2024.2+ (Build 242+)
 - Compatible with all IntelliJ-based IDEs
 
-[Unreleased]: https://github.com/Israel-Kli/jetbrains-plugin-copy-with-inline-issues/compare/v1.2.7...HEAD
+[Unreleased]: https://github.com/Israel-Kli/jetbrains-plugin-copy-with-inline-issues/compare/v1.2.8...HEAD
+[1.2.8]: https://github.com/Israel-Kli/jetbrains-plugin-copy-with-inline-issues/compare/v1.2.7...v1.2.8
 [1.2.7]: https://github.com/Israel-Kli/jetbrains-plugin-copy-with-inline-issues/compare/v1.2.6...v1.2.7
 [1.2.6]: https://github.com/Israel-Kli/jetbrains-plugin-copy-with-inline-issues/compare/v1.2.5...v1.2.6
 [1.2.5]: https://github.com/Israel-Kli/jetbrains-plugin-copy-with-inline-issues/compare/v1.2.4...v1.2.5
