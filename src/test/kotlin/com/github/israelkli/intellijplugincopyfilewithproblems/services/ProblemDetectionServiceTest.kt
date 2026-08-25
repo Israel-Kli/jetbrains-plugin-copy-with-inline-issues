@@ -409,4 +409,58 @@ class ProblemDetectionServiceTest : BasePlatformTestCase() {
             issuesByLine.values.sumOf { it.size } < rawErrorCount
         )
     }
+
+    fun testZeroWidthErrorOnSelectionBoundaryIsReported() {
+        // The parser reports the unclosed tag as a zero-width element sitting at
+        // the end of that tag's line, which is exactly the boundary offset a
+        // single-line selection produces.
+        val xmlCode = "<root>\n    <unclosed>\n</root>"
+        val psiFile = myFixture.configureByText("boundary.xml", xmlCode)
+        val document = psiFile.viewProvider.document ?: throw AssertionError("Document should exist")
+
+        val zeroWidthErrors = PsiTreeUtil.findChildrenOfType(psiFile, PsiErrorElement::class.java)
+            .filter { it.textRange.isEmpty }
+        assertFalse(
+            "Precondition: the fixture must produce a zero-width error element, otherwise this test proves nothing",
+            zeroWidthErrors.isEmpty()
+        )
+
+        val errorOffset = zeroWidthErrors.first().textRange.startOffset
+        val errorLine = document.getLineNumber(errorOffset)
+        assertEquals(
+            "Precondition: the error must sit exactly on the line's end boundary",
+            document.getLineEndOffset(errorLine),
+            errorOffset
+        )
+
+        val selectionOnly = service.findProblemsForFile(
+            psiFile, document,
+            document.getLineStartOffset(errorLine),
+            document.getLineEndOffset(errorLine)
+        )
+
+        assertTrue(
+            "Selecting the line that carries the error must report it, got $selectionOnly",
+            selectionOnly[errorLine].orEmpty().any { it.message.contains("not closed") }
+        )
+    }
+
+    fun testZeroWidthErrorAtRangeStartIsReported() {
+        val xmlCode = "<root>\n    <unclosed>\n</root>"
+        val psiFile = myFixture.configureByText("startBoundary.xml", xmlCode)
+        val document = psiFile.viewProvider.document ?: throw AssertionError("Document should exist")
+
+        val zeroWidthErrors = PsiTreeUtil.findChildrenOfType(psiFile, PsiErrorElement::class.java)
+            .filter { it.textRange.isEmpty }
+        assertFalse("Precondition: fixture must produce a zero-width error element", zeroWidthErrors.isEmpty())
+
+        val errorOffset = zeroWidthErrors.first().textRange.startOffset
+        val fromError = service.findProblemsForFile(psiFile, document, errorOffset, document.textLength)
+            .values.flatten().map { it.message }
+
+        assertTrue(
+            "A range starting exactly at the error must still report it, got $fromError",
+            fromError.any { it.contains("not closed") }
+        )
+    }
 }

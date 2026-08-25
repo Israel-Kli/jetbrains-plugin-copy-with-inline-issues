@@ -18,6 +18,20 @@ class ProblemDetectionService {
 
     data class IssueInfo(val severity: String, val message: String, val startOffset: Int, val endOffset: Int)
 
+    /**
+     * A half-open intersection test can never match a zero-width element, which
+     * is how parsers report "expected X" errors, so such an error was dropped
+     * whenever it sat exactly on the boundary of the requested range. Those are
+     * matched by position instead. For every element that spans at least one
+     * character the test is unchanged.
+     */
+    private fun overlapsRange(elementStart: Int, elementEnd: Int, startOffset: Int, endOffset: Int): Boolean =
+        if (elementStart == elementEnd) {
+            elementStart in startOffset..endOffset
+        } else {
+            elementStart < endOffset && elementEnd > startOffset
+        }
+
     private fun createIssueFromPsiError(errorElement: PsiErrorElement): IssueInfo? {
         val errorMessage = errorElement.errorDescription
         return if (errorMessage.isNotBlank()) {
@@ -101,7 +115,7 @@ class ProblemDetectionService {
             val allHighlighters = markupModel.allHighlighters
 
             for (highlighter in allHighlighters) {
-                if (highlighter.startOffset < endOffset && highlighter.endOffset > startOffset) {
+                if (overlapsRange(highlighter.startOffset, highlighter.endOffset, startOffset, endOffset)) {
                     val tooltip = highlighter.errorStripeTooltip
                     if (tooltip is HighlightInfo) {
                         highlights.add(tooltip)
@@ -140,7 +154,7 @@ class ProblemDetectionService {
                                 val elementStart = element.textRange.startOffset
                                 val elementEnd = element.textRange.endOffset
 
-                                if (elementStart < endOffset && elementEnd > startOffset) {
+                                if (overlapsRange(elementStart, elementEnd, startOffset, endOffset)) {
                                     problems.add(IssueInfo(
                                         severity = "INSPECTION",
                                         message = descriptor.descriptionTemplate,
@@ -173,13 +187,13 @@ class ProblemDetectionService {
                 val errorStart = errorElement.textRange.startOffset
                 val errorEnd = errorElement.textRange.endOffset
 
-                if (errorStart < endOffset && errorEnd > startOffset) {
+                if (overlapsRange(errorStart, errorEnd, startOffset, endOffset)) {
                     createIssueFromPsiError(errorElement)?.let { problems.add(it) }
                 }
             }
 
-            // Retained as a safety net: the overlap test above is half-open and so
-            // matches nothing for an empty range (a selection covering a single
+            // Retained as a safety net: an element spanning at least one character
+            // still cannot match an empty range (a selection covering a single
             // blank line). It only contributes when a parser exposes the error
             // element itself as the leaf at this offset, which the bundled XML and
             // JSON parsers never do.

@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- **Errors sitting on the edge of a selection were dropped** — Parsers report faults such as an unclosed tag or a missing token as a zero-width position rather than as a span of text, and the test deciding whether an issue falls inside the copied region could never match a zero-width position on the region's boundary. Copying the exact line that carried such an error produced the code with no comment attached, even though copying the whole file reported it correctly, so the two actions disagreed about the same file. Zero-width positions are now matched by position and both actions agree. Whole-file output is unchanged, and across 628 file and range combinations diffed against the previous implementation no combination reported fewer issues than before.
+
 ## [1.2.7] - 2026-08-19
 
 ### Changed
