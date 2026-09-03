@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.9] - 2026-09-03
+
 ### Fixed
 
 - **Menu label differed from the label everywhere else** — Both actions rewrote their own label every time the menu opened, using a capitalisation that did not match the one declared for the plugin. The context menu therefore read "Copy with Inline Issues" while Find Action, Settings → Keymap and the shortcut list read "Copy with inline issues", so searching for the action by the name shown in the menu could fail to find it. The label is now declared in one place only.
@@ -240,7 +242,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - IntelliJ IDEA 2024.2+ (Build 242+)
 - Compatible with all IntelliJ-based IDEs
 
-[Unreleased]: https://github.com/Israel-Kli/jetbrains-plugin-copy-with-inline-issues/compare/v1.2.8...HEAD
+[Unreleased]: https://github.com/Israel-Kli/jetbrains-plugin-copy-with-inline-issues/compare/v1.2.9...HEAD
+[1.2.9]: https://github.com/Israel-Kli/jetbrains-plugin-copy-with-inline-issues/compare/v1.2.8...v1.2.9
 [1.2.8]: https://github.com/Israel-Kli/jetbrains-plugin-copy-with-inline-issues/compare/v1.2.7...v1.2.8
 [1.2.7]: https://github.com/Israel-Kli/jetbrains-plugin-copy-with-inline-issues/compare/v1.2.6...v1.2.7
 [1.2.6]: https://github.com/Israel-Kli/jetbrains-plugin-copy-with-inline-issues/compare/v1.2.5...v1.2.6
