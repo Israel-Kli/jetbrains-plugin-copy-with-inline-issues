@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- **Menu label differed from the label everywhere else** — Both actions rewrote their own label every time the menu opened, using a capitalisation that did not match the one declared for the plugin. The context menu therefore read "Copy with Inline Issues" while Find Action, Settings → Keymap and the shortcut list read "Copy with inline issues", so searching for the action by the name shown in the menu could fail to find it. The label is now declared in one place only.
+
 ## [1.2.8] - 2026-08-25
 
 ### Fixed

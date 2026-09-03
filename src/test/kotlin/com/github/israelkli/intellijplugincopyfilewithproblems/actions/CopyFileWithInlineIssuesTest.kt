@@ -1,5 +1,6 @@
 package com.github.israelkli.intellijplugincopyfilewithproblems.actions
 
+import com.intellij.openapi.actionSystem.ActionManager
 import com.intellij.openapi.actionSystem.ActionUpdateThread
 import com.intellij.openapi.actionSystem.CommonDataKeys
 import com.intellij.testFramework.TestActionEvent
@@ -424,5 +425,21 @@ class CopyFileWithInlineIssuesTest : BasePlatformTestCase() {
                 fail("Action should handle concurrent calls: ${e.message}")
             }
         }
+    }
+
+    fun testUpdateDoesNotOverrideMenuLabel() {
+        val registered = ActionManager.getInstance().getAction("CopyFileWithProblems")
+        assertNotNull("Action must be registered under its plugin.xml id", registered)
+        val templateText = registered!!.templatePresentation.text
+        assertNotNull("plugin.xml must declare a text attribute for this action", templateText)
+
+        val actionEvent = TestActionEvent.createTestEvent(registered)
+        registered.update(actionEvent)
+
+        assertEquals(
+            "Menu label must match the plugin.xml declaration, otherwise Find Action, the keymap, and the context menu disagree",
+            templateText,
+            actionEvent.presentation.text
+        )
     }
 }
