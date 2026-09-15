@@ -26,6 +26,14 @@ abstract class BaseFileAction : AnAction() {
      */
     data class CommentStyle(val prefix: String, val suffix: String = "")
 
+    /**
+     * [issueCount] is tallied while [content] is built, from the same filtered
+     * issue list that produced its comments. It is never re-derived from the
+     * text afterwards, so a source line that happens to contain a string like
+     * "ERROR: " cannot inflate it.
+     */
+    data class ContentWithIssueCount(val content: String, val issueCount: Int)
+
     companion object {
         const val LARGE_FILE_THRESHOLD = 500
 
@@ -290,15 +298,18 @@ abstract class BaseFileAction : AnAction() {
         }
     }
 
+    /** Returns the number of issues actually appended, after filtering. */
     private fun appendIssueComments(
         builder: StringBuilder,
         psiFile: PsiFile,
         issues: List<ProblemDetectionService.IssueInfo>
-    ) {
-        for (issue in filterIssues(issues)) {
+    ): Int {
+        val filtered = filterIssues(issues)
+        for (issue in filtered) {
             builder.appendLine()
             builder.append(formatComment(psiFile, issue.severity, issue.message))
         }
+        return filtered.size
     }
 
     protected fun buildContentWithProblems(
@@ -307,14 +318,15 @@ abstract class BaseFileAction : AnAction() {
         lineStart: Int,
         lineEnd: Int,
         headerProvider: (String) -> String
-    ): String {
+    ): ContentWithIssueCount {
         val issuesByLine = problemDetectionService.findProblemsForFile(
             psiFile, document,
             document.getLineStartOffset(lineStart),
             document.getLineEndOffset(lineEnd)
         )
 
-        return buildString {
+        var issueCount = 0
+        val content = buildString {
             val virtualFile = psiFile.virtualFile
             if (virtualFile != null) {
                 val headerComment = formatComment(psiFile, "File", headerProvider(virtualFile.name))
@@ -328,10 +340,11 @@ abstract class BaseFileAction : AnAction() {
                 val lineText = document.getText(TextRange(lineStartOffset, lineEndOffset))
 
                 append(lineText)
-                appendIssueComments(this, psiFile, issuesByLine[lineNumber].orEmpty())
+                issueCount += appendIssueComments(this, psiFile, issuesByLine[lineNumber].orEmpty())
                 appendLine()
             }
         }
+        return ContentWithIssueCount(content, issueCount)
     }
 
     protected fun buildFileContentWithInlineIssues(
@@ -339,13 +352,14 @@ abstract class BaseFileAction : AnAction() {
         document: com.intellij.openapi.editor.Document,
         project: com.intellij.openapi.project.Project,
         virtualFile: com.intellij.openapi.vfs.VirtualFile
-    ): String {
+    ): ContentWithIssueCount {
         val issuesByLine = problemDetectionService.findProblemsForFile(
             psiFile, document,
             0, document.textLength
         )
 
-        return buildString {
+        var issueCount = 0
+        val content = buildString {
             val projectBasePath = project.basePath
             val relativePath = if (projectBasePath != null && virtualFile.path.startsWith(projectBasePath)) {
                 virtualFile.path.substring(projectBasePath.length).removePrefix("/")
@@ -361,10 +375,11 @@ abstract class BaseFileAction : AnAction() {
             val lines = fileContent.lines()
             lines.forEachIndexed { index, line ->
                 append(line)
-                appendIssueComments(this, psiFile, issuesByLine[index].orEmpty())
+                issueCount += appendIssueComments(this, psiFile, issuesByLine[index].orEmpty())
                 appendLine()
             }
         }
+        return ContentWithIssueCount(content, issueCount)
     }
 
     protected fun isCommentIncompatibleLanguage(psiFile: PsiFile): Boolean {
@@ -392,11 +407,6 @@ abstract class BaseFileAction : AnAction() {
             Messages.getWarningIcon()
         )
         return result == Messages.YES
-    }
-
-    protected fun countIssueMarkers(content: String): Int {
-        val pattern = Regex("""(ERROR|WARNING|WEAK_WARNING|INFO|INSPECTION):""")
-        return pattern.findAll(content).count()
     }
 
     protected fun notifyCopyResult(project: Project?, lineCount: Int, issueCount: Int) {

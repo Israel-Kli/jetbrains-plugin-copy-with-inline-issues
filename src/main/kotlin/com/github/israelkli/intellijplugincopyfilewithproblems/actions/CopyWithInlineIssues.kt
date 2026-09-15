@@ -24,8 +24,8 @@ class CopyWithInlineIssues : BaseFileAction() {
 
         if (ApplicationManager.getApplication().isUnitTestMode) {
             val result = buildContentWithProblems(psiFile, document, startLine, endLine) { fileName -> fileName }
-            copyToClipboard(result)
-            notifyCopyResult(project, endLine - startLine + 1, 0)
+            copyToClipboard(result.content)
+            notifyCopyResult(project, endLine - startLine + 1, result.issueCount)
             return
         }
 
@@ -36,15 +36,13 @@ class CopyWithInlineIssues : BaseFileAction() {
                 indicator.isIndeterminate = true
                 indicator.text = "Running IDE inspections..."
 
-                val pair = ApplicationManager.getApplication().runReadAction(Computable {
-                    val content = buildContentWithProblems(psiFile, document, startLine, endLine) { fileName -> fileName }
-                    val count = countIssueMarkers(content)
-                    content to count
+                val result = ApplicationManager.getApplication().runReadAction(Computable {
+                    buildContentWithProblems(psiFile, document, startLine, endLine) { fileName -> fileName }
                 })
 
                 ApplicationManager.getApplication().invokeLater {
-                    copyToClipboard(pair.first)
-                    notifyCopyResult(project, endLine - startLine + 1, pair.second)
+                    copyToClipboard(result.content)
+                    notifyCopyResult(project, endLine - startLine + 1, result.issueCount)
                 }
             }
         }.queue()

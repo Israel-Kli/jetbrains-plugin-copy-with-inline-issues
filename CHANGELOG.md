@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- **Copy notification could overstate how many issues were inlined** — The count came from re-scanning the generated text for the literal pattern `ERROR:`, `WARNING:`, etc., so a source line that legitimately contained one of those words followed by a colon, such as a log statement, was counted as an inlined issue even though no comment was added for it. The count is now taken directly from the issues that were actually inlined while the text was built, so it can no longer diverge from what the comments show.
+
 ## [1.2.9] - 2026-09-03
 
 ### Fixed
