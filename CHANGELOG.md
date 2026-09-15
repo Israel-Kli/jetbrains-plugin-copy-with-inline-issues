@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.10] - 2026-09-15
+
 ### Fixed
 
 - **Copy notification could overstate how many issues were inlined** — The count came from re-scanning the generated text for the literal pattern `ERROR:`, `WARNING:`, etc., so a source line that legitimately contained one of those words followed by a colon, such as a log statement, was counted as an inlined issue even though no comment was added for it. The count is now taken directly from the issues that were actually inlined while the text was built, so it can no longer diverge from what the comments show.
@@ -246,7 +248,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - IntelliJ IDEA 2024.2+ (Build 242+)
 - Compatible with all IntelliJ-based IDEs
 
-[Unreleased]: https://github.com/Israel-Kli/jetbrains-plugin-copy-with-inline-issues/compare/v1.2.9...HEAD
+[Unreleased]: https://github.com/Israel-Kli/jetbrains-plugin-copy-with-inline-issues/compare/v1.2.10...HEAD
+[1.2.10]: https://github.com/Israel-Kli/jetbrains-plugin-copy-with-inline-issues/compare/v1.2.9...v1.2.10
 [1.2.9]: https://github.com/Israel-Kli/jetbrains-plugin-copy-with-inline-issues/compare/v1.2.8...v1.2.9
 [1.2.8]: https://github.com/Israel-Kli/jetbrains-plugin-copy-with-inline-issues/compare/v1.2.7...v1.2.8
 [1.2.7]: https://github.com/Israel-Kli/jetbrains-plugin-copy-with-inline-issues/compare/v1.2.6...v1.2.7
