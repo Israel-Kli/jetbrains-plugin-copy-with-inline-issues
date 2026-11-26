@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Cancel did not stop the analysis. Pressing Cancel on the "Analyzing with inline issues" progress bar had no effect: the scan ran to the end and the result was still copied to the clipboard, replacing whatever was there. The scan ignored the cancel request. It now checks for it at each step and stops at once, leaving the clipboard untouched.
+
 ## [1.2.10] - 2026-09-15
 
 ### Fixed

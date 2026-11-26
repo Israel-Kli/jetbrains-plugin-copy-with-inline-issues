@@ -8,6 +8,8 @@ import com.intellij.lang.annotation.HighlightSeverity
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.editor.Document
 import com.intellij.openapi.editor.impl.DocumentMarkupModel
+import com.intellij.openapi.progress.ProcessCanceledException
+import com.intellij.openapi.progress.ProgressManager
 import com.intellij.profile.codeInspection.InspectionProjectProfileManager
 import com.intellij.psi.PsiDocumentManager
 import com.intellij.psi.PsiErrorElement
@@ -59,6 +61,10 @@ class ProblemDetectionService {
     ): Map<Int, List<IssueInfo>> {
         val allIssues = mutableListOf<IssueInfo>()
 
+        // Nothing below is guaranteed to poll the progress indicator, so the
+        // Cancel button depends on these explicit checks.
+        ProgressManager.checkCanceled()
+
         try {
             val highlights = getHighlightsForRange(psiFile, startOffset, endOffset)
             for (highlight in highlights) {
@@ -91,6 +97,8 @@ class ProblemDetectionService {
             val psiProblems = findPsiProblems(psiFile, startOffset, endOffset)
             allIssues.addAll(psiProblems)
 
+        } catch (e: ProcessCanceledException) {
+            throw e
         } catch (_: Exception) {
             allIssues.addAll(findPsiProblems(psiFile, startOffset, endOffset))
         }
@@ -122,6 +130,8 @@ class ProblemDetectionService {
                     }
                 }
             }
+        } catch (e: ProcessCanceledException) {
+            throw e
         } catch (_: Exception) {
         }
 
@@ -137,6 +147,7 @@ class ProblemDetectionService {
             val enabledInspections = inspectionProfile.getInspectionTools(psiFile)
 
             for (toolWrapper in enabledInspections.take(5)) {
+                ProgressManager.checkCanceled()
                 try {
                     if (toolWrapper.tool is LocalInspectionTool) {
                         val inspectionTool = toolWrapper.tool as LocalInspectionTool
@@ -165,10 +176,14 @@ class ProblemDetectionService {
                             }
                         }
                     }
+                } catch (e: ProcessCanceledException) {
+                    throw e
                 } catch (_: Exception) {
                     continue
                 }
             }
+        } catch (e: ProcessCanceledException) {
+            throw e
         } catch (_: Exception) {
         }
 
@@ -184,6 +199,7 @@ class ProblemDetectionService {
             // it does at and past the end of the file.
             val errorElements = PsiTreeUtil.findChildrenOfType(psiFile, PsiErrorElement::class.java)
             for (errorElement in errorElements) {
+                ProgressManager.checkCanceled()
                 val errorStart = errorElement.textRange.startOffset
                 val errorEnd = errorElement.textRange.endOffset
 
@@ -201,6 +217,8 @@ class ProblemDetectionService {
             if (elementAtStart is PsiErrorElement) {
                 createIssueFromPsiError(elementAtStart)?.let { problems.add(it) }
             }
+        } catch (e: ProcessCanceledException) {
+            throw e
         } catch (_: Exception) {
         }
 
