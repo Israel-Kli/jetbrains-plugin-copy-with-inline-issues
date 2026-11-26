@@ -62,4 +62,4 @@ The plugin uses language-specific comment formats:
 - **Platform**: IntelliJ Community (IC) 2024.2.5
 - **Build range**: 242 to 272.*
 - **Kotlin**: JVM toolchain 21
-- **Gradle**: 8.13
+- **Gradle**: 9.6.1
