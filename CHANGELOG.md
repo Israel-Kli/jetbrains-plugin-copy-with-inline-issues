@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.11] - 2026-11-26
+
 ### Fixed
 
 - Cancel did not stop the analysis. Pressing Cancel on the "Analyzing with inline issues" progress bar had no effect: the scan ran to the end and the result was still copied to the clipboard, replacing whatever was there. The scan ignored the cancel request. It now checks for it at each step and stops at once, leaving the clipboard untouched.
@@ -252,7 +254,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - IntelliJ IDEA 2024.2+ (Build 242+)
 - Compatible with all IntelliJ-based IDEs
 
-[Unreleased]: https://github.com/Israel-Kli/jetbrains-plugin-copy-with-inline-issues/compare/v1.2.10...HEAD
+[Unreleased]: https://github.com/Israel-Kli/jetbrains-plugin-copy-with-inline-issues/compare/v1.2.11...HEAD
+[1.2.11]: https://github.com/Israel-Kli/jetbrains-plugin-copy-with-inline-issues/compare/v1.2.10...v1.2.11
 [1.2.10]: https://github.com/Israel-Kli/jetbrains-plugin-copy-with-inline-issues/compare/v1.2.9...v1.2.10
 [1.2.9]: https://github.com/Israel-Kli/jetbrains-plugin-copy-with-inline-issues/compare/v1.2.8...v1.2.9
 [1.2.8]: https://github.com/Israel-Kli/jetbrains-plugin-copy-with-inline-issues/compare/v1.2.7...v1.2.8
